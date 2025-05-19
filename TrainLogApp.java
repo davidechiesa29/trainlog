@@ -16,6 +16,9 @@ import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 public class TrainLogApp extends Application {
 
@@ -25,56 +28,77 @@ public class TrainLogApp extends Application {
 
 	public void start(Stage stage) {
 
-		stage.setTitle("Train Log App");
+		stage.setTitle("RunStata");
 
 		// Creates the background for the home page
-		Image image = new Image("Images/TrainLogAppBackgroundBlurred.jpg");
+		Image image = new Image("Images/Background5.png");
 		BackgroundImage background = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, 
 			new BackgroundSize(1000, 650, true, true, false, true));		
 		
 		// Creates buttons on the home screen and application name
-		Label appName = new Label("Train Log App");
+
+		Label appName = new Label("RunStata");
 		Button newActivity = new Button("Log Activity");
 		Button viewActivities = new Button("View Activities");
 		Button statistics = new Button("View Statistics");
-		Button records = new Button("View Personal Records");
+		Button records = new Button("Personal Records");
 		Button quit = new Button("Quit");
 
 		// Sets preferred sizes for the buttons
-		newActivity.setPrefWidth(200);
-		viewActivities.setPrefWidth(200);
-		statistics.setPrefWidth(200);
-		records.setPrefWidth(200);
-		quit.setPrefWidth(200);
-		newActivity.setPrefHeight(40);
-		viewActivities.setPrefHeight(40);
-		statistics.setPrefHeight(40);
-		records.setPrefHeight(40);
-		quit.setPrefHeight(40);
+		newActivity.setPrefWidth(250);
+		viewActivities.setPrefWidth(250);
+		statistics.setPrefWidth(250);
+		records.setPrefWidth(250);
+		quit.setPrefWidth(250);
+		newActivity.setPrefHeight(60);
+		viewActivities.setPrefHeight(60);
+		statistics.setPrefHeight(60);
+		records.setPrefHeight(60);
+		quit.setPrefHeight(60);
 
-		appName.setStyle("-fx-font-family:Tahoma; -fx-font-weight:bold; -fx-text-fill: rgb(244, 139,129); -fx-font-size: 60px;");
+		// Create app title and shadow
+		appName.setStyle("-fx-font-family: Sans Serif; -fx-font-weight:bold; -fx-text-fill: rgb(219, 74,64); -fx-font-size: 150px;");
+		DropShadow appNameShadow = new DropShadow();
+		appNameShadow.setOffsetX(2.0);
+		appNameShadow.setOffsetY(2.0);
+		appNameShadow.setColor(Color.BLACK);
+		appNameShadow.setRadius(4.0);
+		appName.setEffect(appNameShadow);
 
-		// Styles the buttons	
-		newActivity.setStyle("-fx-font-family:Tahoma; -fx-font-weight: bold; -fx-color: rgb(244,139,129);");
-		viewActivities.setStyle("-fx-font-family:Tahoma; -fx-font-weight: bold; -fx-color: rgb(244,139,129);");
-		statistics.setStyle("-fx-font-family:Tahoma; -fx-font-weight: bold; -fx-color: rgb(244,139,129);");
-		records.setStyle("-fx-font-family:Tahoma; -fx-font-weight: bold; -fx-color: rgb(244,139,129);");
-		quit.setStyle("-fx-font-family:Tahoma; -fx-font-weight: bold; -fx-color: rgb(244,139,129);");
+		// Styles the buttons
+		DropShadow buttonShadow = new DropShadow();
+		buttonShadow.setOffsetX(2.0);
+		buttonShadow.setOffsetY(2.0);
+		buttonShadow.setColor(Color.BLACK);
+		buttonShadow.setRadius(2.0);
+	
+		newActivity.setStyle("-fx-shadow-highlight-color: transparent; -fx-border-width: 2px;-fx-border-radius: 5px;-fx-border-color: rgb(139,0,0); -fx-font-size: 20px; -fx-font-family:Sans Serif; -fx-color: rgb(219,74,64); -fx-text-fill: rgb(255,214,215);");
+		viewActivities.setStyle("-fx-shadow-highlight-color: transparent; -fx-border-width: 2px; -fx-border-radius: 5px; -fx-border-color: rgb(139,0,0); -fx-font-size: 20px; -fx-font-family:Sans Serif; -fx-color: rgb(219,74,64); -fx-text-fill: rgb(255,214,215);");
+		statistics.setStyle("-fx-shadow-highlight-color: transparent; -fx-border-width: 2px; -fx-border-radius: 5px; -fx-border-color: rgb(139,0,0); -fx-font-size: 20px; -fx-font-family:Sans Serif; -fx-color: rgb(219,74,64); -fx-text-fill:rgb(255,214,215);");
+		records.setStyle("-fx-shadow-highlight-color: transparent; -fx-border-width: 2px; -fx-border-radius: 5px; -fx-border-color: rgb(139,0,0); -fx-font-size: 20px; -fx-font-family:Sans Serif; -fx-color: rgb(219,74,64); -fx-text-fill:rgb(255,214,215);");
+		quit.setStyle("-fx-shadow-highlight-color: transparent; -fx-border-width: 2px; -fx-border-radius: 5px; -fx-border-color: rgb(139,0,0); -fx-font-size: 20px; -fx-font-family:Sans Serif; -fx-color: rgb(219,74,64); -fx-text-fill:rgb(255,214,215);");
+
+		newActivity.setEffect(buttonShadow);
+		viewActivities.setEffect(buttonShadow);
+		statistics.setEffect(buttonShadow);
+		records.setEffect(buttonShadow);
+		quit.setEffect(buttonShadow);
 	
 		// Sets margins around all of the buttons on the home screen so that they aren't stuck together
-		VBox.setMargin(newActivity, new Insets(5, 5, 5, 5));
-		VBox.setMargin(viewActivities, new Insets(5, 5, 5, 5));
-		VBox.setMargin(statistics, new Insets(5, 5, 5, 5));
-		VBox.setMargin(records, new Insets(5, 5, 5, 5));
-		VBox.setMargin(quit, new Insets(5, 5, 5, 5));
+		VBox.setMargin(newActivity, new Insets(3, 3, 3, 3));
+		VBox.setMargin(viewActivities, new Insets(3, 3, 3, 3));
+		VBox.setMargin(statistics, new Insets(3, 3, 3, 3));
+		VBox.setMargin(records, new Insets(3, 3, 3, 3));
+		VBox.setMargin(quit, new Insets(3, 3, 3, 3));
 		VBox.setMargin(appName, new Insets(0,0,70,0));
 
 		// Creates the box containing all of the menu buttons and centers it
 		VBox menu = new VBox(appName, newActivity, viewActivities, statistics, records, quit);
 		menu.setAlignment(Pos.CENTER);
+		//menu.setStyle("-fx-background-color: rgba(0,0,0, 0.3);");
 
 		BorderPane home = new BorderPane();
-		home.setBottom(menu);
+		home.setCenter(menu);
 		home.setMargin(menu, new Insets(0,0,100,0));
 		home.setBackground(new Background(background));
 		quit.setOnAction(event -> Platform.exit());
