@@ -19,6 +19,12 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.animation.PauseTransition;
+import javafx.util.Duration;
+import javafx.animation.FadeTransition;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 
 public class TrainLogApp extends Application {
 
@@ -29,82 +35,181 @@ public class TrainLogApp extends Application {
 	public void start(Stage stage) {
 
 		stage.setTitle("RunStata");
-
-		// Creates the background for the home page
-		Image image = new Image("Images/Background5.png");
-		BackgroundImage background = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, 
-			new BackgroundSize(1000, 650, true, true, false, true));		
 		
-		// Creates buttons on the home screen and application name
+		BorderPane loadingScreen = new BorderPane();
+		loadingScreen.setStyle("-fx-background-color: Black");
+		Label appLogo = new Label("RunStata");
+		appLogo.setStyle("-fx-font-family: Sans Serif; -fx-font-weight:bold; -fx-text-fill: rgb(219, 74,64); -fx-font-size: 150px;");
+		VBox loadingMenu = new VBox(appLogo);
+		loadingScreen.setCenter(loadingMenu);
+		loadingMenu.setAlignment(Pos.CENTER);
 
-		Label appName = new Label("RunStata");
-		Button newActivity = new Button("Log Activity");
-		Button viewActivities = new Button("View Activities");
-		Button statistics = new Button("View Statistics");
-		Button records = new Button("Personal Records");
-		Button quit = new Button("Quit");
-
-		// Sets preferred sizes for the buttons
-		newActivity.setPrefWidth(250);
-		viewActivities.setPrefWidth(250);
-		statistics.setPrefWidth(250);
-		records.setPrefWidth(250);
-		quit.setPrefWidth(250);
-		newActivity.setPrefHeight(60);
-		viewActivities.setPrefHeight(60);
-		statistics.setPrefHeight(60);
-		records.setPrefHeight(60);
-		quit.setPrefHeight(60);
-
-		// Create app title and shadow
-		appName.setStyle("-fx-font-family: Sans Serif; -fx-font-weight:bold; -fx-text-fill: rgb(219, 74,64); -fx-font-size: 150px;");
-		DropShadow appNameShadow = new DropShadow();
-		appNameShadow.setOffsetX(2.0);
-		appNameShadow.setOffsetY(2.0);
-		appNameShadow.setColor(Color.BLACK);
-		appNameShadow.setRadius(4.0);
-		appName.setEffect(appNameShadow);
-
-		// Styles the buttons
-		DropShadow buttonShadow = new DropShadow();
-		buttonShadow.setOffsetX(2.0);
-		buttonShadow.setOffsetY(2.0);
-		buttonShadow.setColor(Color.BLACK);
-		buttonShadow.setRadius(2.0);
-	
-		newActivity.setStyle("-fx-shadow-highlight-color: transparent; -fx-border-width: 2px;-fx-border-radius: 5px;-fx-border-color: rgb(139,0,0); -fx-font-size: 20px; -fx-font-family:Sans Serif; -fx-color: rgb(219,74,64); -fx-text-fill: rgb(255,214,215);");
-		viewActivities.setStyle("-fx-shadow-highlight-color: transparent; -fx-border-width: 2px; -fx-border-radius: 5px; -fx-border-color: rgb(139,0,0); -fx-font-size: 20px; -fx-font-family:Sans Serif; -fx-color: rgb(219,74,64); -fx-text-fill: rgb(255,214,215);");
-		statistics.setStyle("-fx-shadow-highlight-color: transparent; -fx-border-width: 2px; -fx-border-radius: 5px; -fx-border-color: rgb(139,0,0); -fx-font-size: 20px; -fx-font-family:Sans Serif; -fx-color: rgb(219,74,64); -fx-text-fill:rgb(255,214,215);");
-		records.setStyle("-fx-shadow-highlight-color: transparent; -fx-border-width: 2px; -fx-border-radius: 5px; -fx-border-color: rgb(139,0,0); -fx-font-size: 20px; -fx-font-family:Sans Serif; -fx-color: rgb(219,74,64); -fx-text-fill:rgb(255,214,215);");
-		quit.setStyle("-fx-shadow-highlight-color: transparent; -fx-border-width: 2px; -fx-border-radius: 5px; -fx-border-color: rgb(139,0,0); -fx-font-size: 20px; -fx-font-family:Sans Serif; -fx-color: rgb(219,74,64); -fx-text-fill:rgb(255,214,215);");
-
-		newActivity.setEffect(buttonShadow);
-		viewActivities.setEffect(buttonShadow);
-		statistics.setEffect(buttonShadow);
-		records.setEffect(buttonShadow);
-		quit.setEffect(buttonShadow);
-	
-		// Sets margins around all of the buttons on the home screen so that they aren't stuck together
-		VBox.setMargin(newActivity, new Insets(3, 3, 3, 3));
-		VBox.setMargin(viewActivities, new Insets(3, 3, 3, 3));
-		VBox.setMargin(statistics, new Insets(3, 3, 3, 3));
-		VBox.setMargin(records, new Insets(3, 3, 3, 3));
-		VBox.setMargin(quit, new Insets(3, 3, 3, 3));
-		VBox.setMargin(appName, new Insets(0,0,70,0));
-
-		// Creates the box containing all of the menu buttons and centers it
-		VBox menu = new VBox(appName, newActivity, viewActivities, statistics, records, quit);
-		menu.setAlignment(Pos.CENTER);
-		//menu.setStyle("-fx-background-color: rgba(0,0,0, 0.3);");
-
-		BorderPane home = new BorderPane();
-		home.setCenter(menu);
-		home.setMargin(menu, new Insets(0,0,100,0));
-		home.setBackground(new Background(background));
-		quit.setOnAction(event -> Platform.exit());
-		stage.setScene(new Scene(home, 1000, 650));
+		stage.setScene(new Scene(loadingScreen, 1000, 650));
 		stage.show();
+			
+		FadeTransition logoFadeIn = new FadeTransition(Duration.seconds(2), loadingMenu);
+		logoFadeIn.setFromValue(0);
+		logoFadeIn.setToValue(1);
+		logoFadeIn.play();
+	
+		PauseTransition logoStay = new PauseTransition(Duration.seconds(1));
+		logoFadeIn.setOnFinished(e ->logoStay.play());
+			
+		FadeTransition logoFadeOut = new FadeTransition(Duration.seconds(2), loadingMenu);
+		logoFadeOut.setFromValue(1);
+		logoFadeOut.setToValue(0);
+		logoStay.setOnFinished(e -> logoFadeOut.play());
+
+		logoFadeOut.setOnFinished(e -> {
+		
+			// Creates the background for the home page
+			Image image = new Image("Images/Background5.png");
+			BackgroundImage background = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(1000, 650, true, true, false, true));		
+			// Creates buttons on the home screen and application name
+			Label appName = new Label("RunStata");
+			Button newActivity = new Button("Log Activity");
+			Button viewActivities = new Button("View Activities");
+			Button statistics = new Button("View Statistics");
+			Button records = new Button("Personal Records");
+			Button quit = new Button("Quit");
+
+			// Sets preferred sizes for the buttons
+			newActivity.setPrefWidth(250);
+			viewActivities.setPrefWidth(250);
+			statistics.setPrefWidth(250);
+			records.setPrefWidth(250);
+			quit.setPrefWidth(250);
+			newActivity.setPrefHeight(60);
+			viewActivities.setPrefHeight(60);
+			statistics.setPrefHeight(60);
+			records.setPrefHeight(60);
+			quit.setPrefHeight(60);
+
+			// Create app title and shadow
+			appName.setStyle("-fx-font-family: Sans Serif; -fx-font-weight:bold; -fx-text-fill: rgb(219, 74,64); -fx-font-size: 150px;");
+			DropShadow appNameShadow = new DropShadow();
+			appNameShadow.setOffsetX(2.0);
+			appNameShadow.setOffsetY(2.0);
+			appNameShadow.setColor(Color.BLACK);
+			appNameShadow.setRadius(4.0);
+			appName.setEffect(appNameShadow);
+
+			
+
+			// Styles the buttons
+			DropShadow buttonShadow = new DropShadow();
+			buttonShadow.setOffsetX(2.0);
+			buttonShadow.setOffsetY(2.0);
+			buttonShadow.setColor(Color.BLACK);
+			buttonShadow.setRadius(2.0);
+	
+			newActivity.setStyle("-fx-font-weight: bold;" + 
+				     "-fx-shadow-highlight-color: transparent;" + 
+				     "-fx-border-width: 2px;" + 
+				     "-fx-background-radius: 10px;" + 
+				     "-fx-border-radius: 10px;" +
+				     "-fx-border-color: rgb(139,0,0);" + 	
+				     "-fx-font-size: 20px;" + 
+				     "-fx-font-family:'Sans Serif';" +
+				     "-fx-color: rgb(219,74,64);"+ 
+				     "-fx-text-fill: rgb(255,214,215);");
+			viewActivities.setStyle("-fx-font-weight: bold;" +
+                                       "-fx-shadow-highlight-color: transparent;" +
+                                       "-fx-border-width: 2px;" +
+                                       "-fx-background-radius: 10px;" +
+                                       "-fx-border-radius: 10px;" +
+                                       "-fx-border-color: rgb(139,0,0);" +
+                                       "-fx-font-size: 20px;" +
+                                       "-fx-font-family:'Sans Serif';" +
+                                       "-fx-color: rgb(219,74,64);"+
+                                       "-fx-text-fill: rgb(255,214,215);");
+			statistics.setStyle("-fx-font-weight: bold;" +
+                                       "-fx-shadow-highlight-color: transparent;" +
+                                       "-fx-border-width: 2px;" +
+                                       "-fx-background-radius: 10px;" +
+                                       "-fx-border-radius: 10px;" +
+                                       "-fx-border-color: rgb(139,0,0);" +
+                                       "-fx-font-size: 20px;" +
+                                       "-fx-font-family:'Sans Serif';" +
+                                       "-fx-color: rgb(219,74,64);"+
+                                       "-fx-text-fill: rgb(255,214,215);");
+			records.setStyle("-fx-font-weight: bold;" +
+                                       "-fx-shadow-highlight-color: transparent;" +
+                                       "-fx-border-width: 2px;" +
+                                       "-fx-background-radius: 10px;" +
+                                       "-fx-border-radius: 10px;" +
+                                       "-fx-border-color: rgb(139,0,0);" +
+                                       "-fx-font-size: 20px;" +
+                                       "-fx-font-family:'Sans Serif';" +
+                                       "-fx-color: rgb(219,74,64);"+
+                                       "-fx-text-fill: rgb(255,214,215);");
+			quit.setStyle("-fx-font-weight: bold;" +
+                                       "-fx-shadow-highlight-color: transparent;" +
+                                       "-fx-border-width: 2px;" +
+                                       "-fx-background-radius: 10px;" +
+                                       "-fx-border-radius: 10px;" +
+                                       "-fx-border-color: rgb(139,0,0);" +
+                                       "-fx-font-size: 20px;" +
+                                       "-fx-font-family:'Sans Serif';" +
+                                       "-fx-color: rgb(219,74,64);"+
+                              	       "-fx-text-fill: rgb(255,214,215);");
+
+			newActivity.setEffect(buttonShadow);
+			viewActivities.setEffect(buttonShadow);
+			statistics.setEffect(buttonShadow);
+			records.setEffect(buttonShadow);
+			quit.setEffect(buttonShadow);
+	
+			// Sets margins around all of the buttons on the home screen so that they aren't stuck together
+			VBox.setMargin(newActivity, new Insets(2, 2, 2, 2));
+			VBox.setMargin(viewActivities, new Insets(2, 2, 2, 2));
+			VBox.setMargin(statistics, new Insets(2, 2, 2, 2));
+			VBox.setMargin(records, new Insets(2, 2, 2, 2));
+			VBox.setMargin(quit, new Insets(2, 2, 2, 2));
+			VBox.setMargin(appName, new Insets(50,0,70,0));
+
+			// Creates the box containing all of the menu buttons and centers it
+			VBox menu = new VBox(appName, newActivity, viewActivities, statistics, records, quit);
+			
+			menu.setAlignment(Pos.CENTER);
+
+			StackPane root = new StackPane();
+			
+			quit.setOnAction(event -> {
+				BorderPane quitVerification = new BorderPane();
+				Label question = new Label("Are you sure you want to quit?");
+				Button yes = new Button("Yes");
+				Button no = new Button("No");
+				HBox options = new HBox(yes, no);
+				VBox quitOptions = new VBox(question, options);
+				quitOptions.setAlignment(Pos.CENTER);
+				options.setAlignment(Pos.CENTER);
+				quitOptions.setStyle("-fx-background-color: White;");
+				quitOptions.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+				quitVerification.setCenter(quitOptions);
+				root.getChildren().add(quitVerification);
+				no.setOnAction(returnEvent -> root.getChildren().remove(quitVerification));
+				yes.setOnAction(quitEvent -> Platform.exit());
+			});
+
+			BorderPane home = new BorderPane();
+			home.setCenter(menu);
+			home.setMargin(menu, new Insets(0,0,100,0));
+			home.setBackground(new Background(background));
+
+			root.getChildren().add(home);
+			stage.setScene(new Scene(root, 1000, 650));
+
+			// Allows the home menu to fade in rather than appearing abruptly
+			FadeTransition homeScreenAppear = new FadeTransition(Duration.seconds(3), menu);
+			homeScreenAppear.setFromValue(0);
+			homeScreenAppear.setToValue(1);
+			homeScreenAppear.play();
+		});
+		
+
 	}
+
 
 
 }
