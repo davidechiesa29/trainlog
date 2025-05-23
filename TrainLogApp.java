@@ -220,7 +220,7 @@ public class TrainLogApp extends Application {
 				ComboBox currentHour = new ComboBox();
 				currentHour.getSelectionModel().select(Integer.valueOf(formatHour(LocalTime.now().getHour())));
 				ObservableList<Integer> dayHours = FXCollections.observableArrayList();
-				for (int i = 0; i <23; i++) dayHours.add(i);
+				for (int i = 1; i <13; i++) dayHours.add(i);
 				currentHour.setItems(dayHours);
 
 				Label timeSeperator = new Label(":");
@@ -254,6 +254,7 @@ public class TrainLogApp extends Application {
 				types.add("Recovery Run");
 				types.add("Long Run");
 				types.add("Workout");
+				types.add("Race");
 				possibleTypes.setItems(types);
 				VBox runTypeControl = new VBox(runTypeLabel, possibleTypes);
 
