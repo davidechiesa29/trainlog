@@ -36,6 +36,9 @@ public class TrainLogApp extends Application {
 		Application.launch();	
 	}
 
+	/**
+	 * Runs the app
+	 */
 	public void start(Stage stage) {
 
 		// Sets title of the window
