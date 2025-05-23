@@ -25,6 +25,7 @@ import javafx.animation.FadeTransition;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
+import java.util.*;
 
 public class TrainLogApp extends Application {
 
@@ -34,8 +35,10 @@ public class TrainLogApp extends Application {
 
 	public void start(Stage stage) {
 
+		// Sets title of the window
 		stage.setTitle("RunStata");
 		
+		// Creates the loading screen
 		BorderPane loadingScreen = new BorderPane();
 		loadingScreen.setStyle("-fx-background-color: Black");
 		Label appLogo = new Label("RunStata");
@@ -47,21 +50,27 @@ public class TrainLogApp extends Application {
 		stage.setScene(new Scene(loadingScreen, 1000, 650));
 		stage.show();
 			
+		// Causes the logo to fade in for 2 seconds
 		FadeTransition logoFadeIn = new FadeTransition(Duration.seconds(2), loadingMenu);
 		logoFadeIn.setFromValue(0);
 		logoFadeIn.setToValue(1);
 		logoFadeIn.play();
 	
+		// Pauses the logo in the center of the screen for oen second
 		PauseTransition logoStay = new PauseTransition(Duration.seconds(1));
 		logoFadeIn.setOnFinished(e ->logoStay.play());
 			
+		// Makes the logo fade out for two seconds
 		FadeTransition logoFadeOut = new FadeTransition(Duration.seconds(2), loadingMenu);
 		logoFadeOut.setFromValue(1);
 		logoFadeOut.setToValue(0);
 		logoStay.setOnFinished(e -> logoFadeOut.play());
 
+		// Handles events after the logo fades out
 		logoFadeOut.setOnFinished(e -> {
-		
+	
+			StackPane root = new StackPane();			
+	
 			// Creates the background for the home page
 			Image image = new Image("Images/Background5.png");
 			BackgroundImage background = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(1000, 650, true, true, false, true));		
@@ -94,20 +103,65 @@ public class TrainLogApp extends Application {
 			appNameShadow.setRadius(4.0);
 			appName.setEffect(appNameShadow);
 	
+			// Sets styling and effects for when buttons are hovered over or pressed
 			setMenuButtonAnimation(newActivity);
 			setMenuButtonAnimation(viewActivities);
 			setMenuButtonAnimation(statistics);
 			setMenuButtonAnimation(records);
 			setMenuButtonAnimation(quit);
+
+			newActivity.setOnAction(event -> {
+				BorderPane newActivityPage = new BorderPane();
+				Button cancelButton = new Button("Cancel");
+				Button saveButton = new Button("Save Activity");
+				Label activityNameLabel = new Label("Activity Name");
+				Label activityDescriptionLabel = new Label("Activity Description");
+				Label distanceLabel = new Label("Distance");
+				Label timeLabel = new Label("Time");
+				Label dateLabel = new Label("Activity Date");
+				Label locationLabel = new Label("Activity Location");
+
+				BorderPane cancelOrSave = new BorderPane();
+				cancelOrSave.setLeft(cancelButton);
+				cancelOrSave.setRight(saveButton);				
+
+				VBox activity = new VBox(activityNameLabel, activityDescriptionLabel, distanceLabel, timeLabel, dateLabel, cancelOrSave);
+				
+				// Styles the activity menu
+				activity.setStyle("-fx-background-color: White;");
+				DropShadow activityMenuShadow = new DropShadow();
+				activityMenuShadow.setOffsetX(2.0);
+				activityMenuShadow.setOffsetY(2.0);
+				activityMenuShadow.setColor(Color.BLACK);
+				activityMenuShadow.setRadius(4.0);
+				activity.setEffect(activityMenuShadow);
+
+				newActivityPage.setCenter(activity);
+				activity.setAlignment(Pos.CENTER);
+				newActivityPage.setStyle("-fx-background-color: rgb(219,74,64);");
+				root.getChildren().add(newActivityPage);
+
+				// Makes sure that the activity window uses up the smallest size possible
+				activity.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+
+				// Sets action for the cancel butotn
+				cancelButton.setOnAction(cancelEvent -> root.getChildren().remove(newActivityPage));
+
+				// Sets action for the save button
+				saveButton.setOnAction(saveEvent -> {
+					root.getChildren().remove(newActivityPage);
+				});
+			});
 			
 
-			// Styles the buttons
+			// Creates a shadow that will be used for the buttons
 			DropShadow buttonShadow = new DropShadow();
 			buttonShadow.setOffsetX(2.0);
 			buttonShadow.setOffsetY(2.0);
 			buttonShadow.setColor(Color.BLACK);
 			buttonShadow.setRadius(2.0);
-	
+		
+			// Applies the previously created button shadow to the buttons	
 			newActivity.setEffect(buttonShadow);
 			viewActivities.setEffect(buttonShadow);
 			statistics.setEffect(buttonShadow);
@@ -127,8 +181,7 @@ public class TrainLogApp extends Application {
 			
 			menu.setAlignment(Pos.CENTER);
 
-			StackPane root = new StackPane();
-			
+			// Handles event in which quit button is pressed
 			quit.setOnAction(event -> {
 				BorderPane quitVerification = new BorderPane();
 				Label question = new Label("Are you sure you want to quit?");
@@ -182,7 +235,12 @@ public class TrainLogApp extends Application {
 
 	}
 
+	/*
+		Applies the styling and animations to the buttons on the home screen menu
+	*/
 	private void setMenuButtonAnimation(Button b) {
+
+		// Base style for the buttons
     		String base = "-fx-background-color: rgb(219,74,64);" +
                   //-fx-border-color: rgb(139,0,0);" +
                   //"-fx-border-width: 2px;" +
@@ -193,11 +251,14 @@ public class TrainLogApp extends Application {
                   "-fx-font-family: 'Sans Serif';" +
                   "-fx-text-fill: rgb(255,214,215);";
 
+		// Style for when the button is hovered over
     		String hover = base.replace("219,74,64", "200,60,55");
+
+		// Style for when the button is pressed
     		String pressed = base.replace("219,74,64", "150,30,30");
 
-    		b.setStyle(base); 
-
+		// Applies appropriate styles to button
+    		b.setStyle(base);
     		b.setOnMouseEntered(e -> b.setStyle(hover));
     		b.setOnMouseExited(e -> b.setStyle(base));
     		b.setOnMousePressed(e -> b.setStyle(pressed));
