@@ -26,6 +26,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import java.util.*;
+import javafx.scene.control.*;
+import java.time.*;
+import javafx.collections.*;
 
 public class TrainLogApp extends Application {
 
@@ -51,17 +54,17 @@ public class TrainLogApp extends Application {
 		stage.show();
 			
 		// Causes the logo to fade in for 2 seconds
-		FadeTransition logoFadeIn = new FadeTransition(Duration.seconds(2), loadingMenu);
+		FadeTransition logoFadeIn = new FadeTransition(Duration.seconds(0.1), loadingMenu);
 		logoFadeIn.setFromValue(0);
 		logoFadeIn.setToValue(1);
 		logoFadeIn.play();
 	
 		// Pauses the logo in the center of the screen for oen second
-		PauseTransition logoStay = new PauseTransition(Duration.seconds(1));
+		PauseTransition logoStay = new PauseTransition(Duration.seconds(0.1));
 		logoFadeIn.setOnFinished(e ->logoStay.play());
 			
 		// Makes the logo fade out for two seconds
-		FadeTransition logoFadeOut = new FadeTransition(Duration.seconds(2), loadingMenu);
+		FadeTransition logoFadeOut = new FadeTransition(Duration.seconds(0.1), loadingMenu);
 		logoFadeOut.setFromValue(1);
 		logoFadeOut.setToValue(0);
 		logoStay.setOnFinished(e -> logoFadeOut.play());
@@ -114,18 +117,162 @@ public class TrainLogApp extends Application {
 				BorderPane newActivityPage = new BorderPane();
 				Button cancelButton = new Button("Cancel");
 				Button saveButton = new Button("Save Activity");
-				Label activityNameLabel = new Label("Activity Name");
-				Label activityDescriptionLabel = new Label("Activity Description");
-				Label distanceLabel = new Label("Distance");
-				Label timeLabel = new Label("Time");
-				Label dateLabel = new Label("Activity Date");
-				Label locationLabel = new Label("Activity Location");
 
+				Label activityNameLabel = new Label("Activity Name");
+				TextField activityNameField = new TextField("Daily Run");
+
+				Label activityDescriptionLabel = new Label("Activity Description");
+				TextArea activityDescriptionField = new TextArea();		
+				
+				// Handles the distance label and controls	
+				Label distanceLabel = new Label("Distance");
+
+				ComboBox distanceSelectionOnes = new ComboBox();
+				ObservableList<Integer> runLengthOnes = FXCollections.observableArrayList();
+				for (int i = 0; i < 101; i++) runLengthOnes.add(i);
+				distanceSelectionOnes.setItems(runLengthOnes);
+
+				ComboBox distanceSelectionDecimal = new ComboBox();
+				ObservableList<Integer> runLengthDecimals = FXCollections.observableArrayList();
+				for (int i = 0; i<100; i++) runLengthDecimals.add(i);
+				distanceSelectionDecimal.setItems(runLengthDecimals);				
+	
+				Label decimal = new Label(".");
+				HBox finalDistance = new HBox(distanceSelectionOnes, decimal, distanceSelectionDecimal);
+				
+				VBox distanceControl = new VBox(distanceLabel, finalDistance);
+
+				// Handles the duration label and controls
+				Label durationLabel = new Label("Duration");
+
+				// Hours and their input
+				ComboBox hours = new ComboBox();
+				Label hoursLabel = new Label("hrs");
+				ObservableList<Integer> hoursDigit = FXCollections.observableArrayList();
+				for (int i = 0; i < 100; i++) hoursDigit.add(i);
+				hours.setItems(hoursDigit);
+				HBox hoursControl = new HBox(hours, hoursLabel);
+				
+				// minutes and their input
+				ComboBox minutes = new ComboBox();
+				Label minutesLabel = new Label("min");
+				ObservableList<Integer> minDigit = FXCollections.observableArrayList();
+				for (int i = 0; i < 60; i++) minDigit.add(i);
+				minutes.setItems(minDigit);
+				HBox minutesControl = new HBox(minutes, minutesLabel);
+			
+				// Seconds and their input
+				ComboBox seconds = new ComboBox();
+				Label secondsLabel = new Label("s");
+				ObservableList<Integer> secondsDigit = FXCollections.observableArrayList();
+				for (int i =0; i < 60; i++) secondsDigit.add(i);
+				seconds.setItems(secondsDigit);
+				HBox secondsControl = new HBox(seconds, secondsLabel);
+				
+	
+				// Combines seconds, minutes, and hours into one box
+				HBox durationSelection = new HBox(hoursControl, minutesControl, secondsControl);
+				VBox durationControl = new VBox(durationLabel, durationSelection);
+
+
+				// Handles heart-rate label and controls
+				Label heartrateLabel = new Label("Heart-rate");
+
+				ComboBox bpm = new ComboBox();
+				Label beats = new Label("bpm");
+				ObservableList<Integer> bpmDigits = FXCollections.observableArrayList();
+				for (int i=50; i < 220; i++) bpmDigits.add(i);
+				bpm.setItems(bpmDigits);
+				HBox bpmSelection = new HBox(bpm, beats);
+				VBox heartrateControl = new VBox(heartrateLabel, bpmSelection);
+		
+				// Handles location label and controls
+				Label locationLabel = new Label("Activity Location");
+				TextField locationField = new TextField("No Location"); // temporary, want to make one that uses google places API
+				VBox locationControl = new VBox(locationLabel, locationField);
+
+				// Handles Date & Time label and Controls
+				Label dateAndTimeLabel = new Label("Date & Time");
+
+				// Handles month 
+				ComboBox month = new ComboBox();
+				month.getSelectionModel().select(formatMonth(LocalDate.now().getMonth().name()));
+				month.getItems().addAll("January","February","March","April","May","June","July","August","September","October","November","December");
+
+				// Handles day of the month
+				ComboBox<Integer> day = new ComboBox<>();
+				day.getSelectionModel().select(Integer.valueOf(LocalDate.now().getDayOfMonth()));
+				ObservableList<Integer> days = FXCollections.observableArrayList();
+				for (int i =1; i<32; i++) days.add(i);
+				day.setItems(days);
+
+				// Handles upload year
+				ComboBox year = new ComboBox();
+				year.getSelectionModel().select(Integer.valueOf(Year.now().getValue()));
+				ObservableList<Integer> years = FXCollections.observableArrayList();
+				for (int i = 2024; i <= Year.now().getValue(); i++) years.add(i);
+				year.setItems(years);
+
+				// Handles upload hour
+				ComboBox currentHour = new ComboBox();
+				currentHour.getSelectionModel().select(Integer.valueOf(formatHour(LocalTime.now().getHour())));
+				ObservableList<Integer> dayHours = FXCollections.observableArrayList();
+				for (int i = 0; i <23; i++) dayHours.add(i);
+				currentHour.setItems(dayHours);
+
+				Label timeSeperator = new Label(":");
+				
+				// Handles upload minute
+				ComboBox currentMin = new ComboBox();
+				currentMin.getSelectionModel().select(Integer.valueOf(LocalTime.now().getMinute()));
+				ObservableList<Integer> dayMinutes = FXCollections.observableArrayList();
+				for (int i = 0; i<60; i++) dayMinutes.add(i);
+				currentMin.setItems(dayMinutes);
+
+				// Handles upload PM or AM
+				ComboBox amOrPm = new ComboBox();
+				boolean AM = true;
+				if (LocalTime.now().getHour() >= 12) AM = false;
+				if (AM) amOrPm.getSelectionModel().select("AM");
+				else amOrPm.getSelectionModel().select("PM");
+				amOrPm.getItems().addAll("AM","PM");
+				
+				HBox timeSelection = new HBox(currentHour, timeSeperator, currentMin, amOrPm);
+				HBox dateSelection = new HBox(month,day,year);
+				VBox dateAndTimeControl = new VBox(dateAndTimeLabel, dateSelection, timeSelection);
+				
+
+				// Handles run type label and controls
+				Label runTypeLabel = new Label("Run Type");
+				ComboBox possibleTypes = new ComboBox();
+				possibleTypes.getSelectionModel().select("Unspecified");
+				ObservableList<String> types = FXCollections.observableArrayList();
+				types.add("Unspecified");
+				types.add("Recovery Run");
+				types.add("Long Run");
+				types.add("Workout");
+				possibleTypes.setItems(types);
+				VBox runTypeControl = new VBox(runTypeLabel, possibleTypes);
+
+				// Handles weather data controls
+				Label weatherData = new Label("Weather Data");
+				ComboBox includeWeatherData = new ComboBox();
+				includeWeatherData.getItems().addAll("Include", "Do Not Include");
+				includeWeatherData.getSelectionModel().select("Include");
+				VBox weatherControl = new VBox(weatherData, includeWeatherData);
+
+				// Combines all of the extra controls
+				HBox extraControls = new HBox(locationControl, dateAndTimeControl, runTypeControl, weatherControl);
+				
 				BorderPane cancelOrSave = new BorderPane();
 				cancelOrSave.setLeft(cancelButton);
 				cancelOrSave.setRight(saveButton);				
 
-				VBox activity = new VBox(activityNameLabel, activityDescriptionLabel, distanceLabel, timeLabel, dateLabel, cancelOrSave);
+				HBox quickData = new HBox(distanceControl, durationControl, heartrateControl);
+
+				VBox activity = new VBox(activityNameLabel, activityNameField, 
+							quickData, activityDescriptionLabel, activityDescriptionField,
+							extraControls, cancelOrSave);
 				
 				// Styles the activity menu
 				activity.setStyle("-fx-background-color: White;");
@@ -264,8 +411,15 @@ public class TrainLogApp extends Application {
     		b.setOnMousePressed(e -> b.setStyle(pressed));
     		b.setOnMouseReleased(e -> b.setStyle(hover));
 	}
+	
+	private String formatMonth(String month_name){
+		return month_name.substring(0,1) + month_name.substring(1).toLowerCase();
+	}	
 
-
+	private int formatHour(int hour) {
+		if (hour%12 ==0) return 12;
+		return hour%12;
+	}
 
 }
 
