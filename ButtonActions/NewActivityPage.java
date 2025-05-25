@@ -18,9 +18,9 @@ public class NewActivityPage {
 
 		BorderPane newActivityPage = new BorderPane();
 		Button cancelButton = new Button("Cancel");
-		HomeStyle.setMenuButtonAnimation(cancelButton);
 		Button saveButton = new Button("Save Activity");
-		HomeStyle.setMenuButtonAnimation(saveButton);
+		List<Button> saveCancelButtons = new ArrayList<>(Arrays.asList(cancelButton, saveButton));
+		HomeStyle.setMenuButtonAnimation(saveCancelButtons);
 
 		Label activityNameLabel = new Label("Activity Name");
 		NewActivityStyle.styleNewActivityLabel(activityNameLabel);

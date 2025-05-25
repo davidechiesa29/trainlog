@@ -83,16 +83,10 @@ public class TrainLogApp extends Application {
 			List<Button> menuButtons = new ArrayList<>(Arrays.asList(newActivity, viewActivities, statistics, records, quit));
 
 			// Sets preferred sizes for the buttons
-			newActivity.setPrefWidth(250);
-			viewActivities.setPrefWidth(250);
-			statistics.setPrefWidth(250);
-			records.setPrefWidth(250);
-			quit.setPrefWidth(250);
-			newActivity.setPrefHeight(60);
-			viewActivities.setPrefHeight(60);
-			statistics.setPrefHeight(60);
-			records.setPrefHeight(60);
-			quit.setPrefHeight(60);
+			for (Button b : menuButtons) {
+				b.setPrefWidth(250);
+				b.setPrefHeight(60);
+			}
 
 			// Create app title and shadow
 			appName.setStyle("-fx-font-family: Sans Serif; -fx-font-weight:bold; -fx-text-fill: rgb(219, 74,64); -fx-font-size: 150px;");
@@ -104,11 +98,7 @@ public class TrainLogApp extends Application {
 			appName.setEffect(appNameShadow);
 	
 			// Sets styling and effects for when buttons are hovered over or pressed
-			HomeStyle.setMenuButtonAnimation(newActivity);
-			HomeStyle.setMenuButtonAnimation(viewActivities);
-			HomeStyle.setMenuButtonAnimation(statistics);
-			HomeStyle.setMenuButtonAnimation(records);
-			HomeStyle.setMenuButtonAnimation(quit);
+			HomeStyle.setMenuButtonAnimation(menuButtons);
 
 			// Handles events triggered when pressing the new activity button
 			// Creates a new page that allows the user to upload a manual
@@ -125,19 +115,11 @@ public class TrainLogApp extends Application {
 			buttonShadow.setColor(Color.BLACK);
 			buttonShadow.setRadius(2.0);
 		
-			// Applies the previously created button shadow to the buttons	
-			newActivity.setEffect(buttonShadow);
-			viewActivities.setEffect(buttonShadow);
-			statistics.setEffect(buttonShadow);
-			records.setEffect(buttonShadow);
-			quit.setEffect(buttonShadow);
+			// Applies the previously created button shadow to the buttons
+			for (Button b : menuButtons) b.setEffect(buttonShadow);	
 	
 			// Sets margins around all of the buttons on the home screen so that they aren't stuck together
-			VBox.setMargin(newActivity, new Insets(2, 2, 2, 2));
-			VBox.setMargin(viewActivities, new Insets(2, 2, 2, 2));
-			VBox.setMargin(statistics, new Insets(2, 2, 2, 2));
-			VBox.setMargin(records, new Insets(2, 2, 2, 2));
-			VBox.setMargin(quit, new Insets(2, 2, 2, 2));
+			for (Button b : menuButtons) VBox.setMargin(b, new Insets(2));
 			VBox.setMargin(appName, new Insets(50,0,70,0));
 
 			// Creates the box containing all of the menu buttons and centers it

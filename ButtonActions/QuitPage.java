@@ -1,5 +1,6 @@
 package ButtonActions;
 
+import java.util.*;
 import javafx.scene.layout.*;
 import javafx.scene.control.*;
 import javafx.geometry.*;
@@ -7,6 +8,7 @@ import javafx.scene.effect.*;
 import javafx.scene.paint.*;
 import javafx.application.*;
 import Styles.*;
+
 
 public class QuitPage {
 
@@ -16,10 +18,8 @@ public class QuitPage {
 		question.setStyle("-fx-font-weight: bold; -fx-font-size: 20px; -fx-font-family: 'Sans Serif';");
 		Button yes = new Button("Yes");
 		Button no = new Button("No");
-		// yes.setStyle("-fx-font-weight: bold; -fx-font-size: 20px;");
-		HomeStyle.setMenuButtonAnimation(yes);
-		// no.setStyle("-fx-font-weight: bold; -fx-font-size: 20px;");
-		HomeStyle.setMenuButtonAnimation(no);
+		List<Button> quitButtons = Arrays.asList(yes, no);
+		HomeStyle.setMenuButtonAnimation(quitButtons);
 		yes.setPrefWidth(100);
 		yes.setPrefHeight(50);
 		no.setPrefWidth(100);
