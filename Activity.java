@@ -1,19 +1,30 @@
 public class Activity {
 
-	public int time;
+	public String title;
 	public double distance;
+	public int duration;
+	public int heartrate;
+	public String description;
 	public String location;
 	public String date;
-	public String title;
-	public String description;
+	public String time;
+	public String runType;
+	public boolean weatherData;
+	public boolean dynamicTitle;
 
-	public Activity (String title, String description, int time, double distance, String location, String date) {
-		this.time = time;
+	public Activity (String title, double distance, int duration, int heartrate, String description, String location, String date, String time, 
+			String runType, boolean weatherData, boolean dynamicTitle) {
+		this.title = title;
 		this.distance = distance;
+		this.duration = duration;
+		this.heartrate = heartrate;
+		this.description = description;
 		this.location = location;
 		this.date = date;
-		this.title = title;
-		this.description = description;
+		this.time = time;
+		this.runType = runType;
+		this.weatherData = weatherData;
+		this.dynamicTitle = dynamicTitle;
 	}
 
 }

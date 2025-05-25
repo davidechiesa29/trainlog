@@ -27,6 +27,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import java.util.*;
 import javafx.scene.control.*;
+import javafx.scene.*;
 import java.time.*;
 import javafx.collections.*;
 
@@ -36,9 +37,6 @@ public class TrainLogApp extends Application {
 		Application.launch();	
 	}
 
-	/**
-	 * Runs the app
-	 */
 	public void start(Stage stage) {
 
 		// Sets title of the window
@@ -46,9 +44,14 @@ public class TrainLogApp extends Application {
 		
 		// Creates the loading screen
 		BorderPane loadingScreen = new BorderPane();
+
+		// Sets the background of the loading screen black
 		loadingScreen.setStyle("-fx-background-color: Black");
+
+		// Creates app logo and styles it
 		Label appLogo = new Label("RunStata");
 		appLogo.setStyle("-fx-font-family: Sans Serif; -fx-font-weight:bold; -fx-text-fill: rgb(219, 74,64); -fx-font-size: 150px;");
+
 		VBox loadingMenu = new VBox(appLogo);
 		loadingScreen.setCenter(loadingMenu);
 		loadingMenu.setAlignment(Pos.CENTER);
@@ -57,17 +60,17 @@ public class TrainLogApp extends Application {
 		stage.show();
 			
 		// Causes the logo to fade in for 2 seconds
-		FadeTransition logoFadeIn = new FadeTransition(Duration.seconds(0.1), loadingMenu);
+		FadeTransition logoFadeIn = new FadeTransition(Duration.seconds(2), loadingMenu);
 		logoFadeIn.setFromValue(0);
 		logoFadeIn.setToValue(1);
 		logoFadeIn.play();
 	
 		// Pauses the logo in the center of the screen for oen second
-		PauseTransition logoStay = new PauseTransition(Duration.seconds(0.1));
+		PauseTransition logoStay = new PauseTransition(Duration.seconds(1));
 		logoFadeIn.setOnFinished(e ->logoStay.play());
 			
 		// Makes the logo fade out for two seconds
-		FadeTransition logoFadeOut = new FadeTransition(Duration.seconds(0.1), loadingMenu);
+		FadeTransition logoFadeOut = new FadeTransition(Duration.seconds(2), loadingMenu);
 		logoFadeOut.setFromValue(1);
 		logoFadeOut.setToValue(0);
 		logoStay.setOnFinished(e -> logoFadeOut.play());
@@ -119,59 +122,87 @@ public class TrainLogApp extends Application {
 			newActivity.setOnAction(event -> {
 				BorderPane newActivityPage = new BorderPane();
 				Button cancelButton = new Button("Cancel");
+				setMenuButtonAnimation(cancelButton);
 				Button saveButton = new Button("Save Activity");
+				setMenuButtonAnimation(saveButton);
 
 				Label activityNameLabel = new Label("Activity Name");
+				styleNewActivityLabel(activityNameLabel);
 				TextField activityNameField = new TextField("Daily Run");
+				styleNewActivityText(activityNameField);
+				VBox activityNameControl = new VBox(activityNameLabel, activityNameField);
 
 				Label activityDescriptionLabel = new Label("Activity Description");
+				styleNewActivityLabel(activityDescriptionLabel);
 				TextArea activityDescriptionField = new TextArea();		
+				styleNewActivityText(activityDescriptionField);
+				VBox activityDescriptionControl = new VBox(activityDescriptionLabel, activityDescriptionField);
 				
 				// Handles the distance label and controls	
-				Label distanceLabel = new Label("Distance");
+				Label distanceLabel = new Label("Distance (mi)");
+				styleNewActivityLabel(distanceLabel);
 
 				ComboBox distanceSelectionOnes = new ComboBox();
+				distanceSelectionOnes.getSelectionModel().select(Integer.valueOf(0));
+				styleNewActivityDropDown(distanceSelectionOnes);
 				ObservableList<Integer> runLengthOnes = FXCollections.observableArrayList();
 				for (int i = 0; i < 101; i++) runLengthOnes.add(i);
 				distanceSelectionOnes.setItems(runLengthOnes);
 
 				ComboBox distanceSelectionDecimal = new ComboBox();
-				ObservableList<Integer> runLengthDecimals = FXCollections.observableArrayList();
-				for (int i = 0; i<100; i++) runLengthDecimals.add(i);
+				distanceSelectionDecimal.getSelectionModel().select("00");
+				styleNewActivityDropDown(distanceSelectionDecimal);
+				ObservableList<String> runLengthDecimals = FXCollections.observableArrayList();
+				for (int i = 0; i<100; i++) {
+					if (i < 10) runLengthDecimals.add("0"+i);
+					else runLengthDecimals.add(""+i);
+				}
 				distanceSelectionDecimal.setItems(runLengthDecimals);				
 	
 				Label decimal = new Label(".");
 				HBox finalDistance = new HBox(distanceSelectionOnes, decimal, distanceSelectionDecimal);
+				HBox.setMargin(decimal, new Insets(3));
+				decimal.setStyle(
+						 "-fx-font-size: 20px;");
 				
 				VBox distanceControl = new VBox(distanceLabel, finalDistance);
 
 				// Handles the duration label and controls
 				Label durationLabel = new Label("Duration");
+				styleNewActivityLabel(durationLabel);
 
 				// Hours and their input
 				ComboBox hours = new ComboBox();
+				hours.getSelectionModel().select(Integer.valueOf(0));
+				styleNewActivityDropDown(hours);
 				Label hoursLabel = new Label("hrs");
 				ObservableList<Integer> hoursDigit = FXCollections.observableArrayList();
 				for (int i = 0; i < 100; i++) hoursDigit.add(i);
 				hours.setItems(hoursDigit);
 				HBox hoursControl = new HBox(hours, hoursLabel);
+				HBox.setMargin(hoursLabel, new Insets(0,4,0,2));
 				
 				// minutes and their input
 				ComboBox minutes = new ComboBox();
+				minutes.getSelectionModel().select(Integer.valueOf(0));
+				styleNewActivityDropDown(minutes);
 				Label minutesLabel = new Label("min");
 				ObservableList<Integer> minDigit = FXCollections.observableArrayList();
 				for (int i = 0; i < 60; i++) minDigit.add(i);
 				minutes.setItems(minDigit);
 				HBox minutesControl = new HBox(minutes, minutesLabel);
+				HBox.setMargin(minutesLabel, new Insets(0,4,0,2));
 			
 				// Seconds and their input
 				ComboBox seconds = new ComboBox();
+				seconds.getSelectionModel().select(Integer.valueOf(0));
+				styleNewActivityDropDown(seconds);
 				Label secondsLabel = new Label("s");
 				ObservableList<Integer> secondsDigit = FXCollections.observableArrayList();
 				for (int i =0; i < 60; i++) secondsDigit.add(i);
 				seconds.setItems(secondsDigit);
-				HBox secondsControl = new HBox(seconds, secondsLabel);
-				
+				HBox secondsControl = new HBox(seconds, secondsLabel);	
+				HBox.setMargin(secondsLabel, new Insets(0,4,0,2));
 	
 				// Combines seconds, minutes, and hours into one box
 				HBox durationSelection = new HBox(hoursControl, minutesControl, secondsControl);
@@ -180,30 +211,38 @@ public class TrainLogApp extends Application {
 
 				// Handles heart-rate label and controls
 				Label heartrateLabel = new Label("Heart-rate");
+				styleNewActivityLabel(heartrateLabel);
 
 				ComboBox bpm = new ComboBox();
+				styleNewActivityDropDown(bpm);
 				Label beats = new Label("bpm");
 				ObservableList<Integer> bpmDigits = FXCollections.observableArrayList();
 				for (int i=50; i < 220; i++) bpmDigits.add(i);
 				bpm.setItems(bpmDigits);
 				HBox bpmSelection = new HBox(bpm, beats);
+				HBox.setMargin(beats, new Insets(0,4,0,2));
 				VBox heartrateControl = new VBox(heartrateLabel, bpmSelection);
 		
 				// Handles location label and controls
 				Label locationLabel = new Label("Activity Location");
+				styleNewActivityLabel(locationLabel);
 				TextField locationField = new TextField("No Location"); // temporary, want to make one that uses google places API
+				styleNewActivityText(locationField);
 				VBox locationControl = new VBox(locationLabel, locationField);
 
 				// Handles Date & Time label and Controls
 				Label dateAndTimeLabel = new Label("Date & Time");
+				styleNewActivityLabel(dateAndTimeLabel);
 
 				// Handles month 
 				ComboBox month = new ComboBox();
+				styleNewActivityDropDown(month);
 				month.getSelectionModel().select(formatMonth(LocalDate.now().getMonth().name()));
 				month.getItems().addAll("January","February","March","April","May","June","July","August","September","October","November","December");
 
 				// Handles day of the month
-				ComboBox<Integer> day = new ComboBox<>();
+				ComboBox day = new ComboBox<>();
+				styleNewActivityDropDown(day);
 				day.getSelectionModel().select(Integer.valueOf(LocalDate.now().getDayOfMonth()));
 				ObservableList<Integer> days = FXCollections.observableArrayList();
 				for (int i =1; i<32; i++) days.add(i);
@@ -211,6 +250,7 @@ public class TrainLogApp extends Application {
 
 				// Handles upload year
 				ComboBox year = new ComboBox();
+				styleNewActivityDropDown(year);
 				year.getSelectionModel().select(Integer.valueOf(Year.now().getValue()));
 				ObservableList<Integer> years = FXCollections.observableArrayList();
 				for (int i = 2024; i <= Year.now().getValue(); i++) years.add(i);
@@ -218,22 +258,37 @@ public class TrainLogApp extends Application {
 
 				// Handles upload hour
 				ComboBox currentHour = new ComboBox();
+				styleNewActivityDropDown(currentHour);
 				currentHour.getSelectionModel().select(Integer.valueOf(formatHour(LocalTime.now().getHour())));
 				ObservableList<Integer> dayHours = FXCollections.observableArrayList();
 				for (int i = 1; i <13; i++) dayHours.add(i);
 				currentHour.setItems(dayHours);
 
-				Label timeSeperator = new Label(":");
+				Label timeSeperator = new Label(":");	
+				timeSeperator.setStyle(
+						 "-fx-font-size: 20px;");
 				
 				// Handles upload minute
 				ComboBox currentMin = new ComboBox();
-				currentMin.getSelectionModel().select(Integer.valueOf(LocalTime.now().getMinute()));
-				ObservableList<Integer> dayMinutes = FXCollections.observableArrayList();
-				for (int i = 0; i<60; i++) dayMinutes.add(i);
+				styleNewActivityDropDown(currentMin);
+
+				// Parses the minute
+				int minute = Integer.valueOf(LocalTime.now().getMinute());
+				String parsedMinute;
+				if (minute < 10) parsedMinute = "0" + minute;
+				else parsedMinute = "" + minute;
+
+				currentMin.getSelectionModel().select(parsedMinute);
+				ObservableList<String> dayMinutes = FXCollections.observableArrayList();
+				for (int i = 0; i<60; i++) {
+					if (i < 10) dayMinutes.add("0" + i);
+					else dayMinutes.add(""+i);
+				}
 				currentMin.setItems(dayMinutes);
 
 				// Handles upload PM or AM
 				ComboBox amOrPm = new ComboBox();
+				styleNewActivityDropDown(amOrPm);
 				boolean AM = true;
 				if (LocalTime.now().getHour() >= 12) AM = false;
 				if (AM) amOrPm.getSelectionModel().select("AM");
@@ -241,13 +296,20 @@ public class TrainLogApp extends Application {
 				amOrPm.getItems().addAll("AM","PM");
 				
 				HBox timeSelection = new HBox(currentHour, timeSeperator, currentMin, amOrPm);
+				HBox.setMargin(currentMin, new Insets(0,2,0,0));
+				HBox.setMargin(timeSeperator, new Insets(2));
 				HBox dateSelection = new HBox(month,day,year);
+				HBox.setMargin(month, new Insets(0,2,0,0));
+				HBox.setMargin(day, new Insets(0,2,0,0));
 				VBox dateAndTimeControl = new VBox(dateAndTimeLabel, dateSelection, timeSelection);
+				VBox.setMargin(timeSelection, new Insets(5,0,0,0));
 				
 
 				// Handles run type label and controls
 				Label runTypeLabel = new Label("Run Type");
+				styleNewActivityLabel(runTypeLabel);
 				ComboBox possibleTypes = new ComboBox();
+				styleNewActivityDropDown(possibleTypes);
 				possibleTypes.getSelectionModel().select("Unspecified");
 				ObservableList<String> types = FXCollections.observableArrayList();
 				types.add("Unspecified");
@@ -260,26 +322,46 @@ public class TrainLogApp extends Application {
 
 				// Handles weather data controls
 				Label weatherData = new Label("Weather Data");
+				styleNewActivityLabel(weatherData);
 				ComboBox includeWeatherData = new ComboBox();
+				styleNewActivityDropDown(includeWeatherData);
 				includeWeatherData.getItems().addAll("Include", "Do Not Include");
 				includeWeatherData.getSelectionModel().select("Include");
 				VBox weatherControl = new VBox(weatherData, includeWeatherData);
 
+				// Dynamic title controls
+				Label dynamicTitle = new Label("Generate Dynamic Title");
+				styleNewActivityLabel(dynamicTitle);
+				ComboBox generateDynamicTitle = new ComboBox();
+				styleNewActivityDropDown(generateDynamicTitle);
+				generateDynamicTitle.getItems().addAll("Yes", "No");
+				generateDynamicTitle.getSelectionModel().select("No");
+				VBox dynamicTitleControl = new VBox(dynamicTitle, generateDynamicTitle);
+
 				// Combines all of the extra controls
 				HBox extraControls = new HBox(locationControl, dateAndTimeControl, runTypeControl, weatherControl);
-				
+				for (Node child : extraControls.getChildren()) HBox.setMargin(child, new Insets(10)); // Adds appropriate spacing/margin between the controls	
+
 				BorderPane cancelOrSave = new BorderPane();
 				cancelOrSave.setLeft(cancelButton);
 				cancelOrSave.setRight(saveButton);				
 
 				HBox quickData = new HBox(distanceControl, durationControl, heartrateControl);
+				for (Node child : quickData.getChildren()) HBox.setMargin(child, new Insets(0,10,0,10)); // Adds appropriate spacing/margin between the controls
+														      
+				VBox activity = new VBox(activityNameControl,
+							quickData, activityDescriptionControl,
+							extraControls, dynamicTitleControl, cancelOrSave);
+				// Adds appropriate spacing for controls in the activity
+				VBox.setMargin(activityDescriptionControl, new Insets(10, 10, 0, 10));					
+				VBox.setMargin(activityNameControl, new Insets(10));
+				VBox.setMargin(dynamicTitleControl, new Insets(0,0, 20, 10));
+				VBox.setMargin(cancelOrSave, new Insets(10));
 
-				VBox activity = new VBox(activityNameLabel, activityNameField, 
-							quickData, activityDescriptionLabel, activityDescriptionField,
-							extraControls, cancelOrSave);
-				
 				// Styles the activity menu
-				activity.setStyle("-fx-background-color: White;");
+				activity.setStyle("-fx-background-color: White;"+
+						  "-fx-padding: 20 20 20 20;" +
+						  "-fx-background-radius: 20px;");
 				DropShadow activityMenuShadow = new DropShadow();
 				activityMenuShadow.setOffsetX(2.0);
 				activityMenuShadow.setOffsetY(2.0);
@@ -339,8 +421,10 @@ public class TrainLogApp extends Application {
 				question.setStyle("-fx-font-weight: bold; -fx-font-size: 20px; -fx-font-family: 'Sans Serif';");
 				Button yes = new Button("Yes");
 				Button no = new Button("No");
-				yes.setStyle("-fx-font-weight: bold; -fx-font-size: 20px;");
-				no.setStyle("-fx-font-weight: bold; -fx-font-size: 20px;");
+				// yes.setStyle("-fx-font-weight: bold; -fx-font-size: 20px;");
+				setMenuButtonAnimation(yes);
+				// no.setStyle("-fx-font-weight: bold; -fx-font-size: 20px;");
+				setMenuButtonAnimation(no);
 				yes.setPrefWidth(100);
 				yes.setPrefHeight(50);
 				no.setPrefWidth(100);
@@ -386,9 +470,16 @@ public class TrainLogApp extends Application {
 
 	}
 
-	/*
-		Applies the styling and animations to the buttons on the home screen menu
-	*/
+	private void styleNewActivityText(TextInputControl text) {
+		text.setStyle("-fx-background-color: White;" +
+			      "-fx-border-color: Black;");
+	}
+
+	private void styleNewActivityDropDown(ComboBox c){
+		c.setStyle("-fx-background-color: White;"+
+			   "-fx-border-color: Black;");
+	}
+
 	private void setMenuButtonAnimation(Button b) {
 
 		// Base style for the buttons
@@ -423,6 +514,11 @@ public class TrainLogApp extends Application {
 	private int formatHour(int hour) {
 		if (hour%12 ==0) return 12;
 		return hour%12;
+	}
+
+	private void styleNewActivityLabel(Label l){
+		l.setStyle("-fx-font-family: 'Sans Serif';" +
+		           "-fx-font-size: 18px;");
 	}
 
 }
