@@ -20,7 +20,7 @@ public class NewActivityPage {
 		Button cancelButton = new Button("Cancel");
 		Button saveButton = new Button("Save Activity");
 		List<Button> saveCancelButtons = new ArrayList<>(Arrays.asList(cancelButton, saveButton));
-		HomeStyle.setMenuButtonAnimation(saveCancelButtons);
+		GeneralStyle.setButtonAnimation(saveCancelButtons, false);
 
 		Label activityNameLabel = new Label("Activity Name");
 		NewActivityStyle.styleNewActivityLabel(activityNameLabel);

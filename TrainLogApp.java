@@ -97,8 +97,8 @@ public class TrainLogApp extends Application {
 			appNameShadow.setRadius(4.0);
 			appName.setEffect(appNameShadow);
 	
-			// Sets styling and effects for when buttons are hovered over or pressed
-			HomeStyle.setMenuButtonAnimation(menuButtons);
+			// Sets styling and effects for when buttons are hovered over or pressed, including shadows
+			GeneralStyle.setButtonAnimation(menuButtons, true);
 
 			// Handles events triggered when pressing the new activity button
 			// Creates a new page that allows the user to upload a manual
@@ -108,16 +108,6 @@ public class TrainLogApp extends Application {
 			// Creates a small menu that allows user to confirm their quit request
 			quit.setOnAction(event -> QuitPage.create(root));
 			
-			// Creates a shadow that will be used for the buttons
-			DropShadow buttonShadow = new DropShadow();
-			buttonShadow.setOffsetX(2.0);
-			buttonShadow.setOffsetY(2.0);
-			buttonShadow.setColor(Color.BLACK);
-			buttonShadow.setRadius(2.0);
-		
-			// Applies the previously created button shadow to the buttons
-			for (Button b : menuButtons) b.setEffect(buttonShadow);	
-	
 			// Sets margins around all of the buttons on the home screen so that they aren't stuck together
 			for (Button b : menuButtons) VBox.setMargin(b, new Insets(2));
 			VBox.setMargin(appName, new Insets(50,0,70,0));
