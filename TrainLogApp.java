@@ -35,7 +35,10 @@ public class TrainLogApp extends Application {
 
 		// Creates app logo and styles it
 		Label appLogo = new Label("RunStata");
-		appLogo.setStyle("-fx-font-family: Sans Serif; -fx-font-weight:bold; -fx-text-fill: rgb(219, 74,64); -fx-font-size: 150px;");
+		appLogo.setStyle("-fx-font-family: Sans Serif;"+
+			         "-fx-font-weight:bold;" +
+			         "-fx-text-fill: rgb(219, 74,64);" + 
+			         "-fx-font-size: 150px;");
 
 		VBox loadingMenu = new VBox(appLogo);
 		loadingScreen.setCenter(loadingMenu);
@@ -62,7 +65,7 @@ public class TrainLogApp extends Application {
 
 		// Handles events after the logo fades out
 		logoFadeOut.setOnFinished(e -> {
-	
+
 			StackPane root = new StackPane();			
 	
 			// Creates the background for the home page
@@ -75,6 +78,9 @@ public class TrainLogApp extends Application {
 			Button statistics = new Button("View Statistics");
 			Button records = new Button("Personal Records");
 			Button quit = new Button("Quit");
+
+			// Creates a list of the buttons that are on the home screen
+			List<Button> menuButtons = new ArrayList<>(Arrays.asList(newActivity, viewActivities, statistics, records, quit));
 
 			// Sets preferred sizes for the buttons
 			newActivity.setPrefWidth(250);
@@ -107,8 +113,11 @@ public class TrainLogApp extends Application {
 			// Handles events triggered when pressing the new activity button
 			// Creates a new page that allows the user to upload a manual
 			newActivity.setOnAction(event -> NewActivityPage.create(root));
-			
 
+			// Handles event in which quit button is pressed
+			// Creates a small menu that allows user to confirm their quit request
+			quit.setOnAction(event -> QuitPage.create(root));
+			
 			// Creates a shadow that will be used for the buttons
 			DropShadow buttonShadow = new DropShadow();
 			buttonShadow.setOffsetX(2.0);
@@ -135,44 +144,6 @@ public class TrainLogApp extends Application {
 			VBox menu = new VBox(appName, newActivity, viewActivities, statistics, records, quit);
 			
 			menu.setAlignment(Pos.CENTER);
-
-			// Handles event in which quit button is pressed
-			quit.setOnAction(event -> {
-				BorderPane quitVerification = new BorderPane();
-				Label question = new Label("Are you sure you want to quit?");
-				question.setStyle("-fx-font-weight: bold; -fx-font-size: 20px; -fx-font-family: 'Sans Serif';");
-				Button yes = new Button("Yes");
-				Button no = new Button("No");
-				// yes.setStyle("-fx-font-weight: bold; -fx-font-size: 20px;");
-				HomeStyle.setMenuButtonAnimation(yes);
-				// no.setStyle("-fx-font-weight: bold; -fx-font-size: 20px;");
-				HomeStyle.setMenuButtonAnimation(no);
-				yes.setPrefWidth(100);
-				yes.setPrefHeight(50);
-				no.setPrefWidth(100);
-				no.setPrefHeight(50);
-				HBox options = new HBox(yes, no);
-				HBox.setMargin(yes, new Insets(10,10,10,10));
-				HBox.setMargin(no, new Insets(10,10,10,10));
-				VBox quitOptions = new VBox(question, options);
-				quitOptions.setAlignment(Pos.CENTER);
-				VBox.setMargin(question, new Insets(10,10,10,10));
-				options.setAlignment(Pos.CENTER);
-				quitOptions.setStyle("-fx-background-color: White; -fx-background-radius: 10px;");
-				
-                                DropShadow quitMenuShadow = new DropShadow();
-                                quitMenuShadow.setOffsetX(2.0);
-                                quitMenuShadow.setOffsetY(2.0);
-                                quitMenuShadow.setColor(Color.BLACK);
-                                quitMenuShadow.setRadius(4.0);
-                                quitOptions.setEffect(quitMenuShadow);
-
-				quitOptions.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-				quitVerification.setCenter(quitOptions);
-				root.getChildren().add(quitVerification);
-				no.setOnAction(returnEvent -> root.getChildren().remove(quitVerification));
-				yes.setOnAction(quitEvent -> Platform.exit());
-			});
 
 			BorderPane home = new BorderPane();
 			home.setCenter(menu);
