@@ -1,5 +1,6 @@
 package ButtonActions; 
 
+import trainlog.*;
 import Styles.*;
 import javafx.scene.control.*;
 import javafx.application.*;
@@ -17,37 +18,48 @@ public class NewActivityPage {
 	public static void create(StackPane root) {
 
 		BorderPane newActivityPage = new BorderPane();
+
+		// Creates the save and cancel buttons for the activity
 		Button cancelButton = new Button("Cancel");
 		Button saveButton = new Button("Save Activity");
+
+		// Styles save and cancel buttons (without shadow)
 		List<Button> saveCancelButtons = new ArrayList<>(Arrays.asList(cancelButton, saveButton));
 		GeneralStyle.setButtonAnimation(saveCancelButtons, false);
 
+		// Creates the controls for entering the activity name 
 		Label activityNameLabel = new Label("Activity Name");
-		NewActivityStyle.styleNewActivityLabel(activityNameLabel);
 		TextField activityNameField = new TextField("Daily Run");
+
+		// Styles input field for the activity name
 		NewActivityStyle.styleNewActivityText(activityNameField);
+
+		// Combines label and input field for activity name into vertical box
 		VBox activityNameControl = new VBox(activityNameLabel, activityNameField);
 
+		// Creates the controls for entering the activity description
 		Label activityDescriptionLabel = new Label("Activity Description");
-		NewActivityStyle.styleNewActivityLabel(activityDescriptionLabel);
-		TextArea activityDescriptionField = new TextArea();		
+		TextArea activityDescriptionField = new TextArea();	
+		
+		// Styles the input area for the activity description	
 		NewActivityStyle.styleNewActivityText(activityDescriptionField);
+
+		// Combines the label and input area for the activity description into vertical box
 		VBox activityDescriptionControl = new VBox(activityDescriptionLabel, activityDescriptionField);
 		
 		// Handles the distance label and controls	
 		Label distanceLabel = new Label("Distance (mi)");
-		NewActivityStyle.styleNewActivityLabel(distanceLabel);
 
+		// Creates the drop down menu to enter the amount of integer mileage
 		ComboBox distanceSelectionOnes = new ComboBox();
 		distanceSelectionOnes.getSelectionModel().select(Integer.valueOf(0));
-		NewActivityStyle.styleNewActivityDropDown(distanceSelectionOnes);
 		ObservableList<Integer> runLengthOnes = FXCollections.observableArrayList();
 		for (int i = 0; i < 101; i++) runLengthOnes.add(i);
 		distanceSelectionOnes.setItems(runLengthOnes);
 
+		// Creates the drop down menu to enter the amount of decimal mileage
 		ComboBox distanceSelectionDecimal = new ComboBox();
 		distanceSelectionDecimal.getSelectionModel().select("00");
-		NewActivityStyle.styleNewActivityDropDown(distanceSelectionDecimal);
 		ObservableList<String> runLengthDecimals = FXCollections.observableArrayList();
 		for (int i = 0; i<100; i++) {
 			if (i < 10) runLengthDecimals.add("0"+i);
@@ -55,6 +67,7 @@ public class NewActivityPage {
 		}
 		distanceSelectionDecimal.setItems(runLengthDecimals);				
 	
+		// Creates the decimal that seperates the two dropdowns for the distance
 		Label decimal = new Label(".");
 		HBox finalDistance = new HBox(distanceSelectionOnes, decimal, distanceSelectionDecimal);
 		HBox.setMargin(decimal, new Insets(3));
@@ -65,12 +78,10 @@ public class NewActivityPage {
 
 		// Handles the duration label and controls
 		Label durationLabel = new Label("Duration");
-		NewActivityStyle.styleNewActivityLabel(durationLabel);
 
 		// Hours and their input
 		ComboBox hours = new ComboBox();
 		hours.getSelectionModel().select(Integer.valueOf(0));
-		NewActivityStyle.styleNewActivityDropDown(hours);
 		Label hoursLabel = new Label("hrs");
 		ObservableList<Integer> hoursDigit = FXCollections.observableArrayList();
 		for (int i = 0; i < 100; i++) hoursDigit.add(i);
@@ -81,7 +92,6 @@ public class NewActivityPage {
 		// minutes and their input
 		ComboBox minutes = new ComboBox();
 		minutes.getSelectionModel().select(Integer.valueOf(0));
-		NewActivityStyle.styleNewActivityDropDown(minutes);
 		Label minutesLabel = new Label("min");
 		ObservableList<Integer> minDigit = FXCollections.observableArrayList();
 		for (int i = 0; i < 60; i++) minDigit.add(i);
@@ -92,7 +102,6 @@ public class NewActivityPage {
 		// Seconds and their input
 		ComboBox seconds = new ComboBox();
 		seconds.getSelectionModel().select(Integer.valueOf(0));
-		NewActivityStyle.styleNewActivityDropDown(seconds);
 		Label secondsLabel = new Label("s");
 		ObservableList<Integer> secondsDigit = FXCollections.observableArrayList();
 		for (int i =0; i < 60; i++) secondsDigit.add(i);
@@ -107,10 +116,7 @@ public class NewActivityPage {
 
 		// Handles heart-rate label and controls
 		Label heartrateLabel = new Label("Heart-rate");
-		NewActivityStyle.styleNewActivityLabel(heartrateLabel);
-
 		ComboBox bpm = new ComboBox();
-		NewActivityStyle.styleNewActivityDropDown(bpm);
 		Label beats = new Label("bpm");
 		ObservableList<Integer> bpmDigits = FXCollections.observableArrayList();
 		for (int i=50; i < 220; i++) bpmDigits.add(i);
@@ -121,24 +127,20 @@ public class NewActivityPage {
 		
 		// Handles location label and controls
 		Label locationLabel = new Label("Activity Location");
-		NewActivityStyle.styleNewActivityLabel(locationLabel);
 		TextField locationField = new TextField("No Location"); // temporary, want to make one that uses google places API
 		NewActivityStyle.styleNewActivityText(locationField);
 		VBox locationControl = new VBox(locationLabel, locationField);
 
 		// Handles Date & Time label and Controls
 		Label dateAndTimeLabel = new Label("Date & Time");
-		NewActivityStyle.styleNewActivityLabel(dateAndTimeLabel);
 
 		// Handles month 
 		ComboBox month = new ComboBox();
-		NewActivityStyle.styleNewActivityDropDown(month);
 		month.getSelectionModel().select(NewActivityStyle.formatMonth(LocalDate.now().getMonth().name()));
 		month.getItems().addAll("January","February","March","April","May","June","July","August","September","October","November","December");
 
 		// Handles day of the month
 		ComboBox day = new ComboBox<>();
-		NewActivityStyle.styleNewActivityDropDown(day);
 		day.getSelectionModel().select(Integer.valueOf(LocalDate.now().getDayOfMonth()));
 		ObservableList<Integer> days = FXCollections.observableArrayList();
 		for (int i =1; i<32; i++) days.add(i);
@@ -146,7 +148,6 @@ public class NewActivityPage {
 
 		// Handles upload year
 		ComboBox year = new ComboBox();
-		NewActivityStyle.styleNewActivityDropDown(year);
 		year.getSelectionModel().select(Integer.valueOf(Year.now().getValue()));
 		ObservableList<Integer> years = FXCollections.observableArrayList();
 		for (int i = 2024; i <= Year.now().getValue(); i++) years.add(i);
@@ -154,7 +155,6 @@ public class NewActivityPage {
 
 		// Handles upload hour
 		ComboBox currentHour = new ComboBox();
-		NewActivityStyle.styleNewActivityDropDown(currentHour);
 		currentHour.getSelectionModel().select(Integer.valueOf(NewActivityStyle.formatHour(LocalTime.now().getHour())));
 		ObservableList<Integer> dayHours = FXCollections.observableArrayList();
 		for (int i = 1; i <13; i++) dayHours.add(i);
@@ -166,7 +166,6 @@ public class NewActivityPage {
 		
 		// Handles upload minute
 		ComboBox currentMin = new ComboBox();
-		NewActivityStyle.styleNewActivityDropDown(currentMin);
 
 		// Parses the minute
 		int minute = Integer.valueOf(LocalTime.now().getMinute());
@@ -184,7 +183,6 @@ public class NewActivityPage {
 
 		// Handles upload PM or AM
 		ComboBox amOrPm = new ComboBox();
-		NewActivityStyle.styleNewActivityDropDown(amOrPm);
 		boolean AM = true;
 		if (LocalTime.now().getHour() >= 12) AM = false;
 		if (AM) amOrPm.getSelectionModel().select("AM");
@@ -203,9 +201,7 @@ public class NewActivityPage {
 
 		// Handles run type label and controls
 		Label runTypeLabel = new Label("Run Type");
-		NewActivityStyle.styleNewActivityLabel(runTypeLabel);
 		ComboBox possibleTypes = new ComboBox();
-		NewActivityStyle.styleNewActivityDropDown(possibleTypes);
 		possibleTypes.getSelectionModel().select("Unspecified");
 		ObservableList<String> types = FXCollections.observableArrayList();
 		types.add("Unspecified");
@@ -218,26 +214,32 @@ public class NewActivityPage {
 
 		// Handles weather data controls
 		Label weatherData = new Label("Weather Data");
-		NewActivityStyle.styleNewActivityLabel(weatherData);
 		ComboBox includeWeatherData = new ComboBox();
-		NewActivityStyle.styleNewActivityDropDown(includeWeatherData);
 		includeWeatherData.getItems().addAll("Include", "Do Not Include");
 		includeWeatherData.getSelectionModel().select("Include");
 		VBox weatherControl = new VBox(weatherData, includeWeatherData);
 
 		// Dynamic title controls
 		Label dynamicTitle = new Label("Generate Dynamic Title");
-		NewActivityStyle.styleNewActivityLabel(dynamicTitle);
 		ComboBox generateDynamicTitle = new ComboBox();
-		NewActivityStyle.styleNewActivityDropDown(generateDynamicTitle);
 		generateDynamicTitle.getItems().addAll("Yes", "No");
 		generateDynamicTitle.getSelectionModel().select("No");
 		VBox dynamicTitleControl = new VBox(dynamicTitle, generateDynamicTitle);
 
-		// Combines all of the extra controls
-		HBox extraControls = new HBox(locationControl, dateAndTimeControl, runTypeControl, weatherControl);
-		for (Node child : extraControls.getChildren()) HBox.setMargin(child, new Insets(10)); // Adds appropriate spacing/margin between the controls	
+		// Styles all the drop downs and labels
+		List<Label> labels = Arrays.asList(activityNameLabel, activityDescriptionLabel, distanceLabel, durationLabel, heartrateLabel,
+			       	locationLabel, dateAndTimeLabel, runTypeLabel, weatherData, dynamicTitle);
+	       	NewActivityStyle.styleNewActivityLabel(labels);	
+		List<ComboBox> dropdowns = Arrays.asList(distanceSelectionOnes, distanceSelectionDecimal, hours, minutes, seconds, bpm, month, day, year, 
+				currentHour, currentMin, amOrPm, possibleTypes, includeWeatherData, generateDynamicTitle);
+		NewActivityStyle.styleNewActivityDropDown(dropdowns);
 
+		// Combines all of the extra controls (location, date/time, run type, and weather) into one horizontal box
+		HBox extraControls = new HBox(locationControl, dateAndTimeControl, runTypeControl, weatherControl);
+		// Adds appropriate spacing to each control within the previous horizontal box
+		for (Node child : extraControls.getChildren()) HBox.setMargin(child, new Insets(10)); 	
+
+		// Creates a border pane to position the cancel and save buttons at the left and right hands of the new activity menu
 		BorderPane cancelOrSave = new BorderPane();
 		cancelOrSave.setLeft(cancelButton);
 		cancelOrSave.setRight(saveButton);				
@@ -248,22 +250,15 @@ public class NewActivityPage {
 		VBox activity = new VBox(activityNameControl,
 					quickData, activityDescriptionControl,
 					extraControls, dynamicTitleControl, cancelOrSave);
+
 		// Adds appropriate spacing for controls in the activity
 		VBox.setMargin(activityDescriptionControl, new Insets(10, 10, 0, 10));					
 		VBox.setMargin(activityNameControl, new Insets(10));
 		VBox.setMargin(dynamicTitleControl, new Insets(0,0, 20, 10));
 		VBox.setMargin(cancelOrSave, new Insets(10));
 
-		// Styles the activity menu
-		activity.setStyle("-fx-background-color: White;"+
-				  "-fx-padding: 20 20 20 20;" +
-				  "-fx-background-radius: 20px;");
-		DropShadow activityMenuShadow = new DropShadow();
-		activityMenuShadow.setOffsetX(2.0);
-		activityMenuShadow.setOffsetY(2.0);
-		activityMenuShadow.setColor(Color.BLACK);
-		activityMenuShadow.setRadius(4.0);
-		activity.setEffect(activityMenuShadow);
+		// Styles the activity menu background, adds shadow
+		NewActivityStyle.styleNewActivityMenuBackground(activity);
 
 		newActivityPage.setCenter(activity);
 		activity.setAlignment(Pos.CENTER);
@@ -274,11 +269,17 @@ public class NewActivityPage {
 		activity.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 
 		// Sets action for the cancel butotn
-		cancelButton.setOnAction(cancelEvent -> root.getChildren().remove(newActivityPage));
+		cancelButton.setOnAction(cancel -> handleCancelButtonAction(root, newActivityPage));
 
 		// Sets action for the save button
-		saveButton.setOnAction(saveEvent -> {
-			root.getChildren().remove(newActivityPage);
-		});
+		saveButton.setOnAction(save -> handleSaveButtonAction(root, newActivityPage));
+	}
+
+	private static void handleCancelButtonAction(StackPane root, BorderPane newActivityPage) {
+		root.getChildren().remove(newActivityPage);
+	}
+
+	private static void handleSaveButtonAction(StackPane root, BorderPane newActivityPage) {
+		//		Activity activity = new Activity();
 	}
 }	

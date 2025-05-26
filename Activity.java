@@ -1,3 +1,5 @@
+package trainlog;
+
 public class Activity {
 
 	public String title;
@@ -11,6 +13,10 @@ public class Activity {
 	public String runType;
 	public boolean weatherData;
 	public boolean dynamicTitle;
+
+	public Activity(){
+
+	}
 
 	public Activity (String title, double distance, int duration, int heartrate, String description, String location, String date, String time, 
 			String runType, boolean weatherData, boolean dynamicTitle) {
