@@ -371,12 +371,7 @@ public class NewActivityPage {
 		GeneralStyle.setButtonAnimation(buttons, false);
 		root.getChildren().add(saveOrCancelMenu);	
 
-		DropShadow menuShadow = new DropShadow();
-                menuShadow.setOffsetX(2.0);
-                menuShadow.setOffsetY(2.0);
-                menuShadow.setColor(Color.BLACK);
-                menuShadow.setRadius(4.0);
-                menu.setEffect(menuShadow);
+                menu.setEffect(new DropShadow(4.0,2.0,2.0, Color.BLACK));
 
 		menu.setMargin(message, new Insets(10));
 

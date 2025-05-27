@@ -45,12 +45,7 @@ public class QuitPage {
 		quitOptions.setStyle("-fx-background-color: White; -fx-background-radius: 10px;");
 
 		// Creates and adds shadow to the quit menu
-                DropShadow quitMenuShadow = new DropShadow();
-                quitMenuShadow.setOffsetX(2.0);
-                quitMenuShadow.setOffsetY(2.0);
-                quitMenuShadow.setColor(Color.BLACK);
-                quitMenuShadow.setRadius(4.0);
-                quitOptions.setEffect(quitMenuShadow);
+                quitOptions.setEffect(new DropShadow(4.0,2.0,2.0, Color.BLACK));
 
 		// Makes the quit verification menu use up the smallest size possible
 	        quitOptions.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);

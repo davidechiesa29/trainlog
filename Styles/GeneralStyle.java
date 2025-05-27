@@ -23,21 +23,12 @@ public class GeneralStyle {
 		// Style for when the button is pressed
     		String pressed = base.replace("219,74,64", "150,30,30");
 
-		// Creates shadow if requested
-		DropShadow buttonShadow = new DropShadow();
-		if (shadow) {
-			buttonShadow.setOffsetX(2.0);
-			buttonShadow.setOffsetY(2.0);
-			buttonShadow.setColor(Color.BLACK);
-			buttonShadow.setRadius(2.0);			
-		}
-
 		for (Button b : buttons) {
 			// Applies appropriate styles to button
     			b.setStyle(base);
 
 			// Adds shadow if requested
-			if (shadow) b.setEffect(buttonShadow); 
+			if (shadow) b.setEffect(new DropShadow(2.0,2.0,2.0,Color.BLACK)); 
 
 			// Adds animations for hovering and pressing on the button
     			b.setOnMouseEntered(e -> b.setStyle(hover));
@@ -46,4 +37,5 @@ public class GeneralStyle {
     			b.setOnMouseReleased(e -> b.setStyle(hover));
 		}
 	}
+
 }
