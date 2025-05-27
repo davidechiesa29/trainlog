@@ -40,7 +40,7 @@ public class QuitPage {
 
 		// Centers quit menu, adds margins, and styles appropriately
 		quitOptions.setAlignment(Pos.CENTER);
-		VBox.setMargin(question, new Insets(10,10,10,10));
+		VBox.setMargin(question, new Insets(10));
 		options.setAlignment(Pos.CENTER);
 		quitOptions.setStyle("-fx-background-color: White; -fx-background-radius: 10px;");
 
