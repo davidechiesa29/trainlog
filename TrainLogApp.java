@@ -104,6 +104,10 @@ public class TrainLogApp extends Application {
 			// Creates a new page that allows the user to upload a manual
 			newActivity.setOnAction(event -> NewActivityPage.create(root));
 
+			// Handles events triggered when pressing the view activities button
+			// Creates a new page that allows the user to scroll through saved activities
+			viewActivities.setOnAction(event -> ViewActivitiesPage.create(root));
+
 			// Handles event in which quit button is pressed
 			// Creates a small menu that allows user to confirm their quit request
 			quit.setOnAction(event -> QuitPage.create(root));

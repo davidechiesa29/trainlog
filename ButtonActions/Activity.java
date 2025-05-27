@@ -33,4 +33,8 @@ public class Activity {
 		this.dynamicTitle = dynamicTitle;
 	}
 
+	public String toString() {
+		return "Title: " + title + "\nDescription: " + description;
+	}
+
 }
