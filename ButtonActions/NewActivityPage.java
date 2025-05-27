@@ -1,6 +1,5 @@
-package ButtonActions; 
+package ButtonActions;
 
-import trainlog.*;
 import Styles.*;
 import javafx.scene.control.*;
 import javafx.application.*;
@@ -51,14 +50,14 @@ public class NewActivityPage {
 		Label distanceLabel = new Label("Distance (mi)");
 
 		// Creates the drop down menu to enter the amount of integer mileage
-		ComboBox distanceSelectionOnes = new ComboBox();
+		ComboBox<Integer> distanceSelectionOnes = new ComboBox<>();
 		distanceSelectionOnes.getSelectionModel().select(Integer.valueOf(0));
 		ObservableList<Integer> runLengthOnes = FXCollections.observableArrayList();
 		for (int i = 0; i < 101; i++) runLengthOnes.add(i);
 		distanceSelectionOnes.setItems(runLengthOnes);
 
 		// Creates the drop down menu to enter the amount of decimal mileage
-		ComboBox distanceSelectionDecimal = new ComboBox();
+		ComboBox<String> distanceSelectionDecimal = new ComboBox<>();
 		distanceSelectionDecimal.getSelectionModel().select("00");
 		ObservableList<String> runLengthDecimals = FXCollections.observableArrayList();
 		for (int i = 0; i<100; i++) {
@@ -80,7 +79,7 @@ public class NewActivityPage {
 		Label durationLabel = new Label("Duration");
 
 		// Hours and their input
-		ComboBox hours = new ComboBox();
+		ComboBox<Integer> hours = new ComboBox<>();
 		hours.getSelectionModel().select(Integer.valueOf(0));
 		Label hoursLabel = new Label("hrs");
 		ObservableList<Integer> hoursDigit = FXCollections.observableArrayList();
@@ -90,7 +89,7 @@ public class NewActivityPage {
 		HBox.setMargin(hoursLabel, new Insets(0,4,0,2));
 		
 		// minutes and their input
-		ComboBox minutes = new ComboBox();
+		ComboBox<Integer> minutes = new ComboBox<>();
 		minutes.getSelectionModel().select(Integer.valueOf(0));
 		Label minutesLabel = new Label("min");
 		ObservableList<Integer> minDigit = FXCollections.observableArrayList();
@@ -100,7 +99,7 @@ public class NewActivityPage {
 		HBox.setMargin(minutesLabel, new Insets(0,4,0,2));
 		
 		// Seconds and their input
-		ComboBox seconds = new ComboBox();
+		ComboBox<Integer> seconds = new ComboBox<>();
 		seconds.getSelectionModel().select(Integer.valueOf(0));
 		Label secondsLabel = new Label("s");
 		ObservableList<Integer> secondsDigit = FXCollections.observableArrayList();
@@ -116,10 +115,10 @@ public class NewActivityPage {
 
 		// Handles heart-rate label and controls
 		Label heartrateLabel = new Label("Heart-rate");
-		ComboBox bpm = new ComboBox();
+		ComboBox<Integer> bpm = new ComboBox<>();
 		Label beats = new Label("bpm");
 		ObservableList<Integer> bpmDigits = FXCollections.observableArrayList();
-		for (int i=50; i < 220; i++) bpmDigits.add(i);
+		for (int i=50;i < 221; i++) bpmDigits.add(i);
 		bpm.setItems(bpmDigits);
 		HBox bpmSelection = new HBox(bpm, beats);
 		HBox.setMargin(beats, new Insets(0,4,0,2));
@@ -135,26 +134,26 @@ public class NewActivityPage {
 		Label dateAndTimeLabel = new Label("Date & Time");
 
 		// Handles month 
-		ComboBox month = new ComboBox();
+		ComboBox<String> month = new ComboBox<>();
 		month.getSelectionModel().select(NewActivityStyle.formatMonth(LocalDate.now().getMonth().name()));
 		month.getItems().addAll("January","February","March","April","May","June","July","August","September","October","November","December");
 
 		// Handles day of the month
-		ComboBox day = new ComboBox<>();
+		ComboBox<Integer> day = new ComboBox<>();
 		day.getSelectionModel().select(Integer.valueOf(LocalDate.now().getDayOfMonth()));
 		ObservableList<Integer> days = FXCollections.observableArrayList();
 		for (int i =1; i<32; i++) days.add(i);
 		day.setItems(days);
 
 		// Handles upload year
-		ComboBox year = new ComboBox();
+		ComboBox<Integer> year = new ComboBox<>();
 		year.getSelectionModel().select(Integer.valueOf(Year.now().getValue()));
 		ObservableList<Integer> years = FXCollections.observableArrayList();
 		for (int i = 2024; i <= Year.now().getValue(); i++) years.add(i);
 		year.setItems(years);
 
 		// Handles upload hour
-		ComboBox currentHour = new ComboBox();
+		ComboBox<Integer> currentHour = new ComboBox<>();
 		currentHour.getSelectionModel().select(Integer.valueOf(NewActivityStyle.formatHour(LocalTime.now().getHour())));
 		ObservableList<Integer> dayHours = FXCollections.observableArrayList();
 		for (int i = 1; i <13; i++) dayHours.add(i);
@@ -165,7 +164,7 @@ public class NewActivityPage {
 				 "-fx-font-size: 20px;");
 		
 		// Handles upload minute
-		ComboBox currentMin = new ComboBox();
+		ComboBox<String> currentMin = new ComboBox<>();
 
 		// Parses the minute
 		int minute = Integer.valueOf(LocalTime.now().getMinute());
@@ -201,7 +200,7 @@ public class NewActivityPage {
 
 		// Handles run type label and controls
 		Label runTypeLabel = new Label("Run Type");
-		ComboBox possibleTypes = new ComboBox();
+		ComboBox<String> possibleTypes = new ComboBox<>();
 		possibleTypes.getSelectionModel().select("Unspecified");
 		ObservableList<String> types = FXCollections.observableArrayList();
 		types.add("Unspecified");
@@ -214,14 +213,14 @@ public class NewActivityPage {
 
 		// Handles weather data controls
 		Label weatherData = new Label("Weather Data");
-		ComboBox includeWeatherData = new ComboBox();
+		ComboBox<String> includeWeatherData = new ComboBox<>();
 		includeWeatherData.getItems().addAll("Include", "Do Not Include");
 		includeWeatherData.getSelectionModel().select("Include");
 		VBox weatherControl = new VBox(weatherData, includeWeatherData);
 
 		// Dynamic title controls
 		Label dynamicTitle = new Label("Generate Dynamic Title");
-		ComboBox generateDynamicTitle = new ComboBox();
+		ComboBox<String> generateDynamicTitle = new ComboBox<>();
 		generateDynamicTitle.getItems().addAll("Yes", "No");
 		generateDynamicTitle.getSelectionModel().select("No");
 		VBox dynamicTitleControl = new VBox(dynamicTitle, generateDynamicTitle);
@@ -272,14 +271,30 @@ public class NewActivityPage {
 		cancelButton.setOnAction(cancel -> handleCancelButtonAction(root, newActivityPage));
 
 		// Sets action for the save button
-		saveButton.setOnAction(save -> handleSaveButtonAction(root, newActivityPage));
+		saveButton.setOnAction(save -> {
+
+			// Saves all of the values entered
+			String name = activityNameField.getText();
+			String description = activityDescriptionField.getText();
+			double distance = (distanceSelectionOnes.getValue().doubleValue()) + ((double)(Integer.parseInt(distanceSelectionDecimal.getValue())))/100;
+			int duration = (hours.getValue())*3600 + (minutes.getValue())*60 + seconds.getValue();
+			Integer heartrate = bpm.getValue();
+			String location = locationField.getText();
+			String date = month.getValue() + "-" + day.getValue() + "-" + year.getValue();
+			String time = currentHour.getValue() + "-" + currentMin.getValue() + "-" + amOrPm.getValue();
+			String runType = possibleTypes.getValue();
+			boolean incWeatherInfo = false;
+			if (includeWeatherData.getValue().equals("Include")) incWeatherInfo = true;
+			boolean incDynamicTitle = false;
+			if (generateDynamicTitle.getValue().equals("Yes")) incDynamicTitle = true;
+
+			Activity savedActivity = new Activity(name, distance, duration, heartrate, description,
+				location, date, time, runType, incWeatherInfo, incDynamicTitle);		
+		});
 	}
 
 	private static void handleCancelButtonAction(StackPane root, BorderPane newActivityPage) {
 		root.getChildren().remove(newActivityPage);
 	}
 
-	private static void handleSaveButtonAction(StackPane root, BorderPane newActivityPage) {
-		//		Activity activity = new Activity();
-	}
 }	
