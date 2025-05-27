@@ -4,10 +4,9 @@ import java.util.*;
 
 public class ActivityManager {
 
-	private static List<Activity> activities;
+	private static List<Activity> activities = new ArrayList<>();
 
 	public static void add(Activity a) {
-		if (activities == null) activities = new ArrayList<>();
 		activities.add(a);
 	}
 

@@ -14,10 +14,6 @@ public class Activity {
 	public boolean weatherData;
 	public boolean dynamicTitle;
 
-	public Activity(){
-
-	}
-
 	public Activity (String title, double distance, int duration, Integer heartrate, String description, String location, String date, String time, 
 			String runType, boolean weatherData, boolean dynamicTitle) {
 		this.title = title;
