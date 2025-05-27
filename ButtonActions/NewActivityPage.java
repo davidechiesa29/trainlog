@@ -288,12 +288,20 @@ public class NewActivityPage {
 			boolean incDynamicTitle = false;
 			if (generateDynamicTitle.getValue().equals("Yes")) incDynamicTitle = true;
 
+			// Creates a new activity with the stored information
 			Activity savedActivity = new Activity(name, distance, duration, heartrate, description,
-				location, date, time, runType, incWeatherInfo, incDynamicTitle);		
+				location, date, time, runType, incWeatherInfo, incDynamicTitle);
+			// Saves the activity in a list of activities
+			ActivityManager.add(savedActivity);
+
+			// Removes the new activity page from the screen
+			root.getChildren().remove(newActivityPage);
+					
 		});
 	}
 
 	private static void handleCancelButtonAction(StackPane root, BorderPane newActivityPage) {
+
 		root.getChildren().remove(newActivityPage);
 	}
 

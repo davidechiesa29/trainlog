@@ -131,8 +131,7 @@ public class TrainLogApp extends Application {
 			homeScreenAppear.setToValue(1);
 			homeScreenAppear.play();
 		});
-		
-
 	
 	}
+
 }
