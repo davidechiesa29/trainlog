@@ -15,6 +15,10 @@ public class ActivityManager {
 		return activities.get(index);
 	}
 
+	public static boolean remove(Activity a){
+		return activities.remove(a);
+	}
+
 	public static List<Activity> getAll() {
 		return activities;
 	}

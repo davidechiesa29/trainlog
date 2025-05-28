@@ -16,9 +16,14 @@ import javafx.scene.image.*;
 
 public class ViewActivitiesPage {
 
+	private static StackPane rootReference;
+	private static BorderPane viewActivitiesPage;
+
 	public static void create(StackPane root) {
 		
-		BorderPane viewActivitiesPage = new BorderPane();
+		rootReference = root;
+
+		viewActivitiesPage = new BorderPane();
 		viewActivitiesPage.setStyle("-fx-background-color: rgb(219,74,64);");
 
 		Button escape = new Button("Return to Main Menu");
@@ -39,8 +44,10 @@ public class ViewActivitiesPage {
 		scrollBox.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 		scrollBox.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 		scrollBox.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-		viewActivitiesPage.setCenter(scrollBox);
 		scrollBox.setFitToWidth(true);
+
+		viewActivitiesPage.setCenter(scrollBox);
+		scrollableList.setPrefWidth(650);
 		scrollableList.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 		root.getChildren().add(viewActivitiesPage);
 
@@ -49,14 +56,21 @@ public class ViewActivitiesPage {
 
 	private static VBox createViewableActivity(Activity activity) {
 
-		Label edit_activity = new Label("Edit");
+		Button delete_activity = new Button("Delete");
 		Label activity_details = new Label("Details");
-		Label activity_date = new Label(activity.date);
+		Label activity_date_time = new Label(parseActivityDate(activity.date) + " @ " + parseActivityTime(activity.time));
+
+		delete_activity.setOnAction(e -> {
+			ActivityManager.remove(activity);
+			rootReference.getChildren().remove(viewActivitiesPage);
+			create(rootReference); 
+		});
+
 		BorderPane options = new BorderPane();
 		options.setLeft(activity_details);
-		options.setRight(edit_activity);
-		options.setCenter(activity_date);
-		VBox.setMargin(options, new Insets(10));
+		options.setRight(delete_activity);
+		options.setCenter(activity_date_time);
+		//VBox.setMargin(options, new Insets(10));
 
 		Label activity_name = new Label(activity.title);
 		activity_name.setStyle("-fx-font-family: 'Sans-serif'; -fx-font-weight: Bold; -fx-font-size: 24px;");
@@ -66,9 +80,13 @@ public class ViewActivitiesPage {
 
 		Label activity_distance = new Label(parseActivityDistance(activity.distance));
 		Label activity_duration = new Label(parseActivityDuration(activity.duration));
-		Label activity_pace = new Label("0");
+		activity_distance.setStyle("-fx-font-family: 'Sans-serif'; -fx-font-size: 20px; -fx-font-weight: Bold;");
+		activity_duration.setStyle("-fx-font-family: 'Sans-serif'; -fx-font-size: 20px; -fx-font-weight: Bold;");
+		Label activity_pace = new Label(generateActivityPace(activity.distance, activity.duration));
+		activity_pace.setStyle("-fx-font-family: 'Sans-serif'; -fx-font-size: 20px; -fx-font-weight: Bold;");
 
 		HBox quickStats = new HBox(activity_distance, activity_duration, activity_pace);
+		quickStats.setSpacing(25);
 		Image mapArt = new Image("/Images/default_map.png", 562, 384, false, true);
 		ImageView map = new ImageView();
 		map.setImage(mapArt);
@@ -79,16 +97,51 @@ public class ViewActivitiesPage {
 				     "-fx-background-radius: 20px;");
 		activityBox.setEffect(new DropShadow(4,2,2,Color.BLACK));
 		activityBox.setPadding(new Insets(20));
-		activityBox.setPrefHeight(300);
+		activityBox.setPrefHeight(Region.USE_PREF_SIZE);
 		activityBox.setPrefWidth(600);
-		activity_name.setAlignment(Pos.CENTER);
-		VBox.setMargin(activityBox, new Insets(40));
+		activityBox.setAlignment(Pos.TOP_CENTER);
+		activityBox.setSpacing(10);
+		VBox.setMargin(activityBox, new Insets(25));
 		return activityBox;
+	}
+
+	private static String generateActivityPace(double distance, int duration) {
+		if (distance == 0 || duration == 0) return "";
+		int secondsPerMile = Math.round((float)(duration/distance));
+		String formattedPace = "";
+
+		if (secondsPerMile/3600 > 0){
+			formattedPace += (secondsPerMile/3600) + ":";
+			secondsPerMile = secondsPerMile%3600;
+		}
+		if (secondsPerMile/60 > 0) {
+			formattedPace += (secondsPerMile/60) + ":";
+			secondsPerMile = secondsPerMile%60;
+		}
+		if (secondsPerMile == 0)
+			formattedPace += "00";
+		else if (secondsPerMile < 10) 
+			formattedPace += "0" + secondsPerMile;
+		else 
+			formattedPace += "" + secondsPerMile;
+
+		return formattedPace += "/mi";
+
 	}
 
 	private static String parseActivityDistance(double distance) {
 		DecimalFormat d = new DecimalFormat("#.##");
-		return d.format(distance);	
+		return d.format(distance) + " mi";	
+	}
+
+	private static String parseActivityDate(String date){
+		String[] dateSplit = date.split("-");
+		return dateSplit[0] + " " + dateSplit[1] + ", " + dateSplit[2];
+	}
+
+	private static String parseActivityTime(String time) {
+		String[] timeSplit = time.split("-");
+		return timeSplit[0] + ":" + timeSplit[1] + " " + timeSplit[2];
 	}
 
 	private static String parseActivityDuration(int duration) {
