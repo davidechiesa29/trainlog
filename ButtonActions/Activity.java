@@ -1,6 +1,6 @@
 package ButtonActions;
 
-public class Activity {
+public class Activity implements Comparable<Activity> {
 
 	public String title;
 	public double distance;
@@ -32,5 +32,56 @@ public class Activity {
 	public String toString() {
 		return "Title: " + title + "\nDescription: " + description;
 	}
+
+	@Override
+	public int compareTo(Activity other) {
+
+		String[] thisDate = this.date.split("-");
+		String[] otherDate = other.date.split("-");
+		String[] thisTime = this.time.split("-");
+		String[] otherTime = other.time.split("-");
+
+		thisDate[0] = convertMonthToInteger(thisDate[0]);
+		otherDate[0] = convertMonthToInteger(otherDate[0]);
+		thisTime[2] = convertTimeToInteger(thisTime[2]);
+		otherTime[2] = convertTimeToInteger(otherTime[2]);
+
+		for (int i = 0; i<3; i++) {
+			if (Integer.parseInt(thisDate[i]) > Integer.parseInt(otherDate[i]))
+				return -1;
+			else if (Integer.parseInt(thisDate[i]) < Integer.parseInt(otherDate[i]))
+				return 1;
+		}
+		
+		for (int i = 0; i<3; i++) {
+			if (Integer.parseInt(thisTime[i]) > Integer.parseInt(otherTime[i]))
+				return -1;
+			else if (Integer.parseInt(thisTime[i]) < Integer.parseInt(otherTime[i]))
+                                 return 1;
+		}
+
+		return 0;
+	}
+
+	private String convertMonthToInteger(String s){
+		if (s.equals("January")) return "1";
+		if (s.equals("Febuary")) return "2";
+		if (s.equals("March")) return "3";
+		if (s.equals("April")) return "4";
+		if (s.equals("May")) return "5";
+		if (s.equals("June")) return "6";
+		if (s.equals("July")) return "7";
+		if (s.equals("August")) return "8";
+		if (s.equals("September")) return "9";
+		if (s.equals("October")) return "10";
+		if (s.equals("November")) return "11";
+		return "12";
+	}
+
+	private String convertTimeToInteger(String s){
+		if (s.equals("AM")) return "0";
+		return "1";
+	}
+
 
 }

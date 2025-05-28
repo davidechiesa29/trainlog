@@ -4,10 +4,11 @@ import java.util.*;
 
 public class ActivityManager {
 
-	private static List<Activity> activities = new ArrayList<>();
+	private static List<Activity> activities = new LinkedList<>();
 
 	public static void add(Activity a) {
-		activities.add(a);
+		activities.add(0,a);
+		Collections.sort(activities);
 	}
 
 	public static Activity get(int index){
