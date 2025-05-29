@@ -26,6 +26,9 @@ public class TrainLogApp extends Application {
 
 		// Sets title of the window
 		stage.setTitle("RunStata");
+
+		// Retrieves previously saved activities
+		ActivityManager.retrieveSavedActivities();
 		
 		// Creates the loading screen
 		BorderPane loadingScreen = new BorderPane();

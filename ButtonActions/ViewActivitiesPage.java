@@ -23,6 +23,7 @@ public class ViewActivitiesPage {
 		
 		rootReference = root;
 
+		// Creates the page itself
 		viewActivitiesPage = new BorderPane();
 		viewActivitiesPage.setStyle("-fx-background-color: rgb(219,74,64);");
 
@@ -31,14 +32,22 @@ public class ViewActivitiesPage {
 		GeneralStyle.setButtonAnimation(buttons, false);
 		escape.setOnAction(e -> root.getChildren().remove(viewActivitiesPage));
 
+		Label noActivities = new Label("No activities have currently been logged.");
+		noActivities.setStyle("-fx-text-fill: rgb(219,74,64); -fx-font-weight: Bold; -fx-font-family: 'Sans-serif'; -fx-font-size: 24px;");
+		VBox.setMargin(noActivities, new Insets(20));
+
 		VBox scrollableList = new VBox(escape);
 		VBox.setMargin(escape, new Insets(20));
 		scrollableList.setStyle("-fx-background-color: rgb(245,245,245);");
 		scrollableList.setAlignment(Pos.CENTER);
 
 		PriorityQueue<Activity> activities = new PriorityQueue<>(ActivityManager.getAll());
-		while (!activities.isEmpty())
-			scrollableList.getChildren().add(createViewableActivity(activities.poll()));
+		if (activities.isEmpty())
+			scrollableList.getChildren().add(noActivities);
+		else { 
+			while (!activities.isEmpty())
+				scrollableList.getChildren().add(createViewableActivity(activities.poll()));
+		}
 
 		ScrollPane scrollBox = new ScrollPane(scrollableList);
 		scrollBox.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -56,43 +65,72 @@ public class ViewActivitiesPage {
 
 	private static VBox createViewableActivity(Activity activity) {
 
+
+		// Creates the buttons for checking the activity details or deleting a specific activity
 		Button delete_activity = new Button("Delete");
 		Button activity_details = new Button("Details");
+		//List<Button> buttons = Arrays.asList(delete_activity, activity_details);
+		//GeneralStyle.setButtonAnimation(buttons, false);
+
+
+		// Creates the label containing the date and time of the activity
 		Label activity_date_time = new Label(parseActivityDate(activity.date) + " @ " + parseActivityTime(activity.time));
 
+		// Sets the action for deleting an activity
 		delete_activity.setOnAction(e -> {
 			ActivityManager.remove(activity);
 			rootReference.getChildren().remove(viewActivitiesPage);
 			create(rootReference); 
 		});
 
+		// Combines the delete and details button, and time/date label into one box
 		BorderPane options = new BorderPane();
 		options.setLeft(activity_details);
 		options.setRight(delete_activity);
 		options.setCenter(activity_date_time);
-		//VBox.setMargin(options, new Insets(10));
 
+		// Stores and displays activity name
 		Label activity_name = new Label(activity.title);
 		activity_name.setStyle("-fx-font-family: 'Sans-serif'; -fx-font-weight: Bold; -fx-font-size: 24px;");
 
-		Label activity_description = new Label(activity.description);
+		// Stores and displays activity description 
+		Label activity_description = new Label();
 		activity_description.setStyle("-fx-font-family: 'Sans-serif'; -fx-font-size: 14px;");
+		activity_description.setWrapText(true);
+		activity_description.setText(activity.description);
+		VBox.setMargin(activity_description, new Insets(10));
 
+		// Stores and displays activity distance
 		Label activity_distance = new Label(parseActivityDistance(activity.distance));
-		Label activity_duration = new Label(parseActivityDuration(activity.duration));
 		activity_distance.setStyle("-fx-font-family: 'Sans-serif'; -fx-font-size: 20px; -fx-font-weight: Bold;");
-		activity_duration.setStyle("-fx-font-family: 'Sans-serif'; -fx-font-size: 20px; -fx-font-weight: Bold;");
-		Label activity_pace = new Label(generateActivityPace(activity.distance, activity.duration));
-		activity_pace.setStyle("-fx-font-family: 'Sans-serif'; -fx-font-size: 20px; -fx-font-weight: Bold;");
+		Label distance = new Label("Distance");
+		VBox displayDistance = new VBox(distance, activity_distance);
+		displayDistance.setSpacing(2);
 
-		HBox quickStats = new HBox(activity_distance, activity_duration, activity_pace);
+		// Stores and displays activity duration 
+		Label activity_duration = new Label(parseActivityDuration(activity.duration));
+		activity_duration.setStyle("-fx-font-family: 'Sans-serif'; -fx-font-size: 20px; -fx-font-weight: Bold;");
+		Label duration = new Label("Duration");
+		VBox displayDuration = new VBox(duration, activity_duration);
+		displayDuration.setSpacing(2);
+
+		// Stores and displays activity pace
+		VBox displayPace = generateActivityPace(activity.distance, activity.duration);
+		displayPace.setSpacing(2);
+
+		HBox quickStats = new HBox(displayDistance, displayDuration, displayPace);
 		quickStats.setSpacing(25);
 		Image mapArt = new Image("/Images/default_map.png", 562, 384, false, true);
 		ImageView map = new ImageView();
 		map.setImage(mapArt);
 		
 
-		VBox activityBox = new VBox(options, activity_name, activity_description, quickStats);
+		VBox activityBox = new VBox(options, activity_name);
+		if (!activity.description.trim().equals("")) activityBox.getChildren().add(activity_description);
+		activityBox.getChildren().add(quickStats);
+		// Adds default map art
+		//		activityBox.getChildren().add(map);
+
 		activityBox.setStyle("-fx-background-color: White;"+
 				     "-fx-background-radius: 20px;");
 		activityBox.setEffect(new DropShadow(4,2,2,Color.BLACK));
@@ -105,8 +143,8 @@ public class ViewActivitiesPage {
 		return activityBox;
 	}
 
-	private static String generateActivityPace(double distance, int duration) {
-		if (distance == 0 || duration == 0) return "";
+	private static VBox generateActivityPace(double distance, int duration) {
+		if (distance == 0 || duration == 0) return new VBox();
 		int secondsPerMile = Math.round((float)(duration/distance));
 		String formattedPace = "";
 
@@ -125,7 +163,11 @@ public class ViewActivitiesPage {
 		else 
 			formattedPace += "" + secondsPerMile;
 
-		return formattedPace += "/mi";
+		formattedPace += "/mi";
+		Label paceLabel = new Label("Pace");
+		Label activity_pace = new Label(formattedPace);
+		activity_pace.setStyle("-fx-font-family: 'Sans-serif'; -fx-font-size: 20px; -fx-font-weight: Bold;");
+		return new VBox(paceLabel, activity_pace);
 
 	}
 
