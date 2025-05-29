@@ -36,9 +36,9 @@ public class ViewActivitiesPage {
 		scrollableList.setStyle("-fx-background-color: rgb(245,245,245);");
 		scrollableList.setAlignment(Pos.CENTER);
 
-		for (Activity a : ActivityManager.getAll()) {
-			scrollableList.getChildren().add(createViewableActivity(a));
-		}
+		PriorityQueue<Activity> activities = new PriorityQueue<>(ActivityManager.getAll());
+		while (!activities.isEmpty())
+			scrollableList.getChildren().add(createViewableActivity(activities.poll()));
 
 		ScrollPane scrollBox = new ScrollPane(scrollableList);
 		scrollBox.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -57,7 +57,7 @@ public class ViewActivitiesPage {
 	private static VBox createViewableActivity(Activity activity) {
 
 		Button delete_activity = new Button("Delete");
-		Label activity_details = new Label("Details");
+		Button activity_details = new Button("Details");
 		Label activity_date_time = new Label(parseActivityDate(activity.date) + " @ " + parseActivityTime(activity.time));
 
 		delete_activity.setOnAction(e -> {

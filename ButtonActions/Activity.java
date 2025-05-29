@@ -53,12 +53,18 @@ public class Activity implements Comparable<Activity> {
 				return 1;
 		}
 		
-		for (int i = 0; i<3; i++) {
-			if (Integer.parseInt(thisTime[i]) > Integer.parseInt(otherTime[i]))
-				return -1;
-			else if (Integer.parseInt(thisTime[i]) < Integer.parseInt(otherTime[i]))
-                                 return 1;
-		}
+		if (Integer.parseInt(thisTime[2]) > Integer.parseInt(otherTime[2]))
+			return -1;
+		else if (Integer.parseInt(thisTime[2]) < Integer.parseInt(otherTime[2]))
+                        return 1;
+		if (Integer.parseInt(thisTime[0]) > Integer.parseInt(otherTime[0]))
+			return -1;
+		else if (Integer.parseInt(thisTime[0]) < Integer.parseInt(otherTime[0]))
+                        return 1;
+		if (Integer.parseInt(thisTime[1]) > Integer.parseInt(otherTime[1]))
+			return -1;
+		else if (Integer.parseInt(thisTime[1]) < Integer.parseInt(otherTime[1]))
+                        return 1;
 
 		return 0;
 	}
