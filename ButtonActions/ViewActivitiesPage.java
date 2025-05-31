@@ -13,6 +13,7 @@ import javafx.scene.paint.*;
 import javafx.scene.*;
 import java.text.*;
 import javafx.scene.image.*;
+import javafx.scene.text.*;
 
 public class ViewActivitiesPage {
 
@@ -103,11 +104,11 @@ public class ViewActivitiesPage {
 		activity_name.setStyle("-fx-font-family: 'Sans-serif'; -fx-font-weight: Bold; -fx-font-size: 24px;");
 
 		// Stores and displays activity description 
-		Label activity_description = new Label();
+		Text activity_description = new Text();
 		activity_description.setStyle("-fx-font-family: 'Sans-serif'; -fx-font-size: 14px;");
-		activity_description.setWrapText(true);
 		activity_description.setText(activity.description);
-		VBox.setMargin(activity_description, new Insets(10));
+		activity_description.setWrappingWidth(550);
+		VBox.setMargin(activity_description, new Insets(10,0,10,0));
 
 		// Stores and displays activity distance
 		Label activity_distance = new Label(parseActivityDistance(activity.distance));
@@ -166,6 +167,7 @@ public class ViewActivitiesPage {
 		activityBox.setPadding(new Insets(20));
 		activityBox.setPrefHeight(Region.USE_PREF_SIZE);
 		activityBox.setPrefWidth(600);
+		activityBox.setMaxWidth(600);
 		activityBox.setAlignment(Pos.TOP_CENTER);
 		activityBox.setSpacing(10);
 		VBox.setMargin(activityBox, new Insets(25));
