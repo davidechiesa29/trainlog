@@ -72,9 +72,18 @@ public class ViewActivitiesPage {
 		//List<Button> buttons = Arrays.asList(delete_activity, activity_details);
 		//GeneralStyle.setButtonAnimation(buttons, false);
 
+		
+		// Creates teh label containing the location of the activity 
+		Label activity_location = new Label(activity.location);
+
 
 		// Creates the label containing the date and time of the activity
 		Label activity_date_time = new Label(parseActivityDate(activity.date) + " @ " + parseActivityTime(activity.time));
+
+		VBox locationAndDate = new VBox();
+		if (!activity_location.getText().equals("No Location")) locationAndDate.getChildren().add(activity_location);
+		locationAndDate.getChildren().add(activity_date_time);
+		locationAndDate.setAlignment(Pos.CENTER);
 
 		// Sets the action for deleting an activity
 		delete_activity.setOnAction(e -> {
@@ -87,7 +96,7 @@ public class ViewActivitiesPage {
 		BorderPane options = new BorderPane();
 		options.setLeft(activity_details);
 		options.setRight(delete_activity);
-		options.setCenter(activity_date_time);
+		options.setCenter(locationAndDate);
 
 		// Stores and displays activity name
 		Label activity_name = new Label(activity.title);
@@ -118,7 +127,27 @@ public class ViewActivitiesPage {
 		VBox displayPace = generateActivityPace(activity.distance, activity.duration);
 		displayPace.setSpacing(2);
 
-		HBox quickStats = new HBox(displayDistance, displayDuration, displayPace);
+		// Stores and displays activity heart-rate
+		Label activity_hr = new Label();
+		if (activity.heartrate != null)  activity_hr.setText(""+activity.heartrate);
+		else activity_hr.setText("");
+		Label hr = new Label("HR");
+		activity_hr.setStyle("-fx-font-family: 'Sans-serif'; -fx-font-size: 20px; -fx-font-weight: Bold;");
+		VBox displayHR = new VBox(hr, activity_hr);
+		displayHR.setSpacing(2);	
+
+		// Stores and displays run type
+		Label activity_type = new Label(activity.runType);
+		activity_type.setStyle(generateRunTypeStyle(activity.runType));
+		Label type = new Label("Type");
+		VBox displayType = new VBox(type, activity_type);
+		displayType.setSpacing(2);
+
+		HBox quickStats = new HBox(displayDistance, displayDuration);
+		if (!(activity.duration == 0 || activity.distance ==0)) quickStats.getChildren().add(displayPace);
+		if (activity.heartrate != null) quickStats.getChildren().add(displayHR);
+		if (!activity.runType.equals("Unspecified")) quickStats.getChildren().add(displayType);
+
 		quickStats.setSpacing(25);
 		Image mapArt = new Image("/Images/default_map.png", 562, 384, false, true);
 		ImageView map = new ImageView();
@@ -169,6 +198,15 @@ public class ViewActivitiesPage {
 		activity_pace.setStyle("-fx-font-family: 'Sans-serif'; -fx-font-size: 20px; -fx-font-weight: Bold;");
 		return new VBox(paceLabel, activity_pace);
 
+	}
+
+	private static String generateRunTypeStyle(String s) {
+		String base = ("-fx-font-family: 'Sans-serif'; -fx-font-size: 20px; -fx-font-weight: Bold; -fx-text-fill: Black;");
+		if (s.equals("Recovery")) base = base.replace("Black", "rgb(0,153,204)");
+		else if (s.equals("Race")) base = base.replace("Black", "rgb(219, 74, 64)");
+		else if (s.equals("Workout")) base = base.replace("Black", "rgb(265, 165, 0)");
+		else if (s.equals("Long Run")) base = base.replace("Black", "rgb(0, 153, 0)");
+		return base;
 	}
 
 	private static String parseActivityDistance(double distance) {

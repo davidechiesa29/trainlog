@@ -46,12 +46,18 @@ public class Activity implements Comparable<Activity> {
 		thisTime[2] = convertTimeToInteger(thisTime[2]);
 		otherTime[2] = convertTimeToInteger(otherTime[2]);
 
-		for (int i = 0; i<3; i++) {
-			if (Integer.parseInt(thisDate[i]) > Integer.parseInt(otherDate[i]))
-				return -1;
-			else if (Integer.parseInt(thisDate[i]) < Integer.parseInt(otherDate[i]))
-				return 1;
-		}
+		if (Integer.parseInt(thisDate[2]) > Integer.parseInt(otherDate[2]))
+			return -1;
+		else if (Integer.parseInt(thisDate[2]) < Integer.parseInt(otherDate[2]))
+                        return 1;
+		if (Integer.parseInt(thisDate[0]) > Integer.parseInt(otherDate[0]))
+			return -1;
+		else if (Integer.parseInt(thisDate[0]) < Integer.parseInt(otherDate[0]))
+                        return 1;
+		if (Integer.parseInt(thisDate[1]) > Integer.parseInt(otherDate[1]))
+			return -1;
+		else if (Integer.parseInt(thisDate[1]) < Integer.parseInt(otherDate[1]))
+                        return 1;
 		
 		if (Integer.parseInt(thisTime[2]) > Integer.parseInt(otherTime[2]))
 			return -1;

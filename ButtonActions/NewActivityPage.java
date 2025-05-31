@@ -316,7 +316,7 @@ public class NewActivityPage {
 		possibleTypes.getSelectionModel().select("Unspecified");
 		ObservableList<String> types = FXCollections.observableArrayList();
 		types.add("Unspecified");
-		types.add("Recovery Run");
+		types.add("Recovery");
 		types.add("Long Run");
 		types.add("Workout");
 		types.add("Race");
