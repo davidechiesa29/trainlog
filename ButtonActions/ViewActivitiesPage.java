@@ -163,6 +163,7 @@ public class ViewActivitiesPage {
 		activityBox.setAlignment(Pos.TOP_CENTER);
 		activityBox.setSpacing(10);
 		VBox.setMargin(activityBox, new Insets(25));
+		VBox.setMargin(options, new Insets(0,0,10,0));
 		return activityBox;
 	}
 
