@@ -80,7 +80,7 @@ public class TrainLogApp extends Application {
 			Button newActivity = new Button("Log Activity");
 			Button viewActivities = new Button("View Activities");
 			Button statistics = new Button("View Statistics");
-			Button records = new Button("Personal Records");
+			Button records = new Button("Settings");
 			Button quit = new Button("Quit");
 
 			// Creates a list of the buttons that are on the home screen
@@ -122,11 +122,17 @@ public class TrainLogApp extends Application {
 
 			// Creates the box containing all of the menu buttons and centers it
 			VBox menu = new VBox(appName, newActivity, viewActivities, statistics, records, quit);
-			
+
 			menu.setAlignment(Pos.CENTER);
 
 			BorderPane home = new BorderPane();
 			home.setCenter(menu);
+
+			Label attribution = new Label("City data © SimpleMaps.com");
+			attribution.setStyle("-fx-font-size: 14px; -fx-text-fill: White; -fx-font-weight: Bold");
+			BorderPane.setMargin(attribution, new Insets(10));
+			home.setBottom(attribution);
+
 			home.setMargin(menu, new Insets(0,0,100,0));
 			home.setBackground(new Background(background));
 

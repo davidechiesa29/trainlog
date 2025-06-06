@@ -165,13 +165,18 @@ public class Activity implements Comparable<Activity> {
 	/**
 	 * Creates the specific prompt which will be fed to chatGPT
 	 */
-	private static String generatePrompt(Activity activity){
-		String prompt = "Generate a creative title for a running activity." + 
-			"Use the following information to inspire the title, but do not" + 
-			"directly mention distances, dates, times, or locations. Think abstractly or emotionally." +
-			"Do not surround the entire title with quotes." +
-		       	" Distance: " + activity.distance + ", Duration: " + activity.duration + ", Run Type: " + activity.runType +
-			", Time: " + activity.time;
+	private static String generatePrompt(Activity activity) {
+
+		String prompt = "Generate a unique and creative title for a running activity." +
+        	" Use the following information to inspire the title, but avoid repeating phrases like 'Chasing' or 'Whispers'. " +
+        	"Do not directly mention distances, dates, times, or locations. Avoid clichés. Be original, surprising, or vivid." +
+        	" You can draw from emotions, colors, moods, music, nature, or the vibe of the run." +
+        	" Limit the title to a maximum of 40 characters and do not use quotation marks around it." +
+        	" Distance: " + activity.distance +
+        	", Duration: " + activity.duration +
+        	", Run Type: " + activity.runType +
+        	", Time: " + activity.time;
+
 		if (activity.heartrate != null)
 			prompt += ", HR: " + activity.heartrate;
 		return prompt;

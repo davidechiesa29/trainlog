@@ -1,5 +1,6 @@
 package ButtonActions;
 
+import java.io.*;
 import Styles.*;
 import javafx.scene.control.*;
 import javafx.application.*;
@@ -23,7 +24,10 @@ public class NewActivityPage {
 
 	// Labels for each activity field
 	private static Label activityNameLabel, activityDescriptionLabel, distanceLabel, durationLabel, heartrateLabel, locationLabel, dateAndTimeLabel, runTypeLabel, weatherDataLabel, dynamicTitleLabel;
-	
+
+	// Used to store the possible locations a user can pick for their activity
+	private static List<String> locationSuggestions;
+
 	public static void create(StackPane root) {
 
 		BorderPane newActivityPage = new BorderPane();
@@ -233,16 +237,41 @@ public class NewActivityPage {
 
 		locationLabel = new Label("Activity Location");
 
-	        locationField = new TextField("No Location"); // temporary, want to make one that uses google places API
-							      
-		List<String> locations = Arrays.asList("Jersey City, NJ","New York, NY","Hoboken, NJ","Bayonne, NJ");
+	        locationField = new TextField("No Location");
 
-		TextFields.bindAutoCompletion(locationField, locations);
-							      
+		generateLocations(); 			
+		TextFields.bindAutoCompletion(locationField, locationSuggestions);
 
 		NewActivityStyle.styleNewActivityText(locationField);
 
 		return new VBox(locationLabel, locationField);
+	}
+
+	private static void generateLocations() {
+
+		locationSuggestions = new ArrayList<>();
+
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader("ButtonActions/us_cities/uscities.csv"));
+
+			String line = reader.readLine();
+			line = reader.readLine();
+
+			while (line != null) {
+				String[] info = line.split(",");
+				String city_name = info[0].substring(1, info[0].length()-1);
+				String state_name = info[2].substring(1, info[2].length()-1);
+				locationSuggestions.add(city_name + ", " + state_name);
+				line = reader.readLine();
+			}
+		} catch (FileNotFoundException e){
+			System.out.println("File not found");
+		} catch (IOException e) { 
+			System.out.println("Failure parsing the file");
+		} catch (Exception e) {
+			System.out.println("Unexpected exception caught");
+		}	
+
 	}
 
 	private static VBox createDateAndTimeControl() {
@@ -398,7 +427,11 @@ public class NewActivityPage {
 				double distance = (distanceSelectionOnes.getValue().doubleValue()) + ((double)(Integer.parseInt(distanceSelectionDecimal.getValue())))/100;
 				int duration = (hours.getValue())*3600 + (minutes.getValue())*60 + seconds.getValue();
 				Integer heartrate = bpm.getValue();
+
+				// Verifies that a proper location was entered and stores it
 				String location = locationField.getText();
+				if (!location.equals("No Location") && !locationSuggestions.contains(location)) location = "No Location"; 
+
 				String date = month.getValue() + "-" + day.getValue() + "-" + year.getValue();
 				String time = currentHour.getValue() + "-" + currentMin.getValue() + "-" + amOrPm.getValue();
 				String runType = possibleTypes.getValue();
