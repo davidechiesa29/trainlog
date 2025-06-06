@@ -1,11 +1,11 @@
 runApp: TrainLogApp.class
-	java --module-path javafx/lib --add-modules javafx.controls,javafx.fxml -cp .:./gson.jar TrainLogApp
+	java --module-path javafx/lib --add-modules javafx.controls,javafx.fxml -cp .:./gson.jar:controlsfx.jar TrainLogApp
 TrainLogApp.class: TrainLogApp.java Styles/NewActivityStyle.class ButtonActions/NewActivityPage.class ButtonActions/QuitPage.class Styles/GeneralStyle.class ButtonActions/Activity.class ButtonActions/ActivityManager.class ButtonActions/ViewActivitiesPage.class
-	javac --module-path javafx/lib --add-modules javafx.controls,javafx.fxml -cp .:./gson.jar TrainLogApp.java
+	javac --module-path javafx/lib --add-modules javafx.controls,javafx.fxml -cp .:./gson.jar:controlsfx.jar TrainLogApp.java
 ButtonActions/Activity.class: ButtonActions/Activity.java
 	javac -cp .:./gson.jar ButtonActions/Activity.java
 ButtonActions/ActivityManager.class: ButtonActions/ActivityManager.java
-	javac -cp .:./gson.jar ButtonActions/ActivityManager.java
+	javac --module-path javafx/lib --add-modules javafx.controls,javafx.fxml -cp .:./gson.jar:controlsfx.jar ButtonActions/ActivityManager.java
 Styles/NewActivityStyle.class: Styles/NewActivityStyle.java
 	javac --module-path javafx/lib --add-modules javafx.controls,javafx.fxml Styles/NewActivityStyle.java
 Styles/GeneralStyle.class: Styles/GeneralStyle.java

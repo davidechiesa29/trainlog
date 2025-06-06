@@ -1,6 +1,8 @@
 package ButtonActions;
 
+import org.controlsfx.control.Notifications;
 import java.util.*;
+import javafx.geometry.Pos;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.io.*;
@@ -15,6 +17,7 @@ public class ActivityManager {
 	 */
 	public static void add(Activity a) {
 		activities.add(a);
+		savedActivityNotification();
 		saveActivities();
 	}
 
@@ -65,6 +68,11 @@ public class ActivityManager {
 			System.out.println("Failed to save activities");
 		}	
 
+	}
+
+	public static void savedActivityNotification(){
+		Notifications.create().title("Your activity has been saved").text("You can now view your activity").position(Pos.TOP_RIGHT).show();
+		
 	}
 
 }
