@@ -1,4 +1,9 @@
 package ButtonActions;
+import java.net.http.*;
+import java.net.URI;
+import java.util.*;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 public class Activity implements Comparable<Activity> {
 
@@ -16,7 +21,6 @@ public class Activity implements Comparable<Activity> {
 
 	public Activity (String title, double distance, int duration, Integer heartrate, String description, String location, String date, String time, 
 			String runType, boolean weatherData, boolean dynamicTitle) {
-		this.title = title;
 		this.distance = distance;
 		this.duration = duration;
 		this.heartrate = heartrate;
@@ -27,10 +31,9 @@ public class Activity implements Comparable<Activity> {
 		this.runType = runType;
 		this.weatherData = weatherData;
 		this.dynamicTitle = dynamicTitle;
-	}
+		this.title = title;
 
-	public String toString() {
-		return "Title: " + title + "\nDescription: " + description;
+		if (this.dynamicTitle == true) this.title = generateActivityTitle(this);
 	}
 
 	@Override
@@ -94,6 +97,71 @@ public class Activity implements Comparable<Activity> {
 		if (s.equals("AM")) return "0";
 		return "1";
 	}
+
+	public static String generateActivityTitle(Activity a) {
+
+
+		String apiKey = "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";
+
+		String body = """
+		{
+			"model": "gpt-4o-mini",
+			"messages": [
+				{
+					"role":"user",
+					"content": "placeholder"
+				}
+			]
+		}""";
+
+		body = body.replace("placeholder",generatePrompt(a)); 
+
+		HttpRequest request = HttpRequest.newBuilder().uri(URI.create("https://api.openai.com/v1/chat/completions")).header("Content-Type","application/json").header("Authorization","Bearer " + apiKey).POST(HttpRequest.BodyPublishers.ofString(body)).build();
+		
+		try {
+			HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+			Gson parsed = new Gson();
+		        Output output =  parsed.fromJson(response.body(),new TypeToken<Output>(){});
+			return output.choices.get(0).message.content;
+			
+
+		} catch (Exception e){
+			System.out.println("Error fetching dynamically generated title, resorting to default title name");
+		}
+
+		return "Daily Run";
+
+
+	}
+
+	private static String generatePrompt(Activity activity){
+		String prompt = "Generate a creative title for a running activity." + 
+			"Use the following information to inspire the title, but do not" + 
+			"directly mention distances, dates, times, or locations. Think abstractly or emotionally." +
+			"Do not surround the entire title with quotes." +
+		       	" Distance: " + activity.distance + ", Duration: " + activity.duration + ", Run Type: " + activity.runType +
+			", Time: " + activity.time;
+		if (activity.heartrate != null)
+			prompt += ", HR: " + activity.heartrate;
+		return prompt;
+	}
+
+	class Output {
+
+		ArrayList<Choice> choices;
+
+		class Choice {
+
+			Message message;
+
+			class Message {
+
+				String content;
+			}
+		}
+
+	}
+
 
 
 }

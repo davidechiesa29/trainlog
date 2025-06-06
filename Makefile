@@ -3,7 +3,7 @@ runApp: TrainLogApp.class
 TrainLogApp.class: TrainLogApp.java Styles/NewActivityStyle.class ButtonActions/NewActivityPage.class ButtonActions/QuitPage.class Styles/GeneralStyle.class ButtonActions/Activity.class ButtonActions/ActivityManager.class ButtonActions/ViewActivitiesPage.class
 	javac --module-path javafx/lib --add-modules javafx.controls,javafx.fxml -cp .:./gson.jar TrainLogApp.java
 ButtonActions/Activity.class: ButtonActions/Activity.java
-	javac ButtonActions/Activity.java
+	javac -cp .:./gson.jar ButtonActions/Activity.java
 ButtonActions/ActivityManager.class: ButtonActions/ActivityManager.java
 	javac -cp .:./gson.jar ButtonActions/ActivityManager.java
 Styles/NewActivityStyle.class: Styles/NewActivityStyle.java
