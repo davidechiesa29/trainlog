@@ -11,6 +11,7 @@ import javafx.scene.layout.*;
 import javafx.scene.effect.*;
 import javafx.scene.paint.*;
 import javafx.scene.*;
+import org.controlsfx.control.textfield.TextFields;
 
 public class NewActivityPage {
 	
@@ -233,6 +234,12 @@ public class NewActivityPage {
 		locationLabel = new Label("Activity Location");
 
 	        locationField = new TextField("No Location"); // temporary, want to make one that uses google places API
+							      
+		List<String> locations = Arrays.asList("Jersey City, NJ","New York, NY","Hoboken, NJ","Bayonne, NJ");
+
+		TextFields.bindAutoCompletion(locationField, locations);
+							      
+
 		NewActivityStyle.styleNewActivityText(locationField);
 
 		return new VBox(locationLabel, locationField);

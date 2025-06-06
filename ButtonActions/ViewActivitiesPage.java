@@ -70,21 +70,13 @@ public class ViewActivitiesPage {
 		// Creates the buttons for checking the activity details or deleting a specific activity
 		Button delete_activity = new Button("Delete");
 		Button activity_details = new Button("Details");
-		//List<Button> buttons = Arrays.asList(delete_activity, activity_details);
-		//GeneralStyle.setButtonAnimation(buttons, false);
 
-		
-		// Creates teh label containing the location of the activity 
-		Label activity_location = new Label(activity.location);
+		// Creates the label containing the date and time (and possibly location) of the activity
+		String dateTimeLocation = parseActivityDate(activity.date) + " @ " + parseActivityTime(activity.time);
 
-
-		// Creates the label containing the date and time of the activity
-		Label activity_date_time = new Label(parseActivityDate(activity.date) + " @ " + parseActivityTime(activity.time));
-
-		VBox locationAndDate = new VBox();
-		if (!activity_location.getText().equals("No Location")) locationAndDate.getChildren().add(activity_location);
-		locationAndDate.getChildren().add(activity_date_time);
-		locationAndDate.setAlignment(Pos.CENTER);
+		if (!activity.location.equals("No Location")) dateTimeLocation = activity.location + " - " + dateTimeLocation;
+		Label dateTimeLocationLabel = new Label(dateTimeLocation);
+		dateTimeLocationLabel.setAlignment(Pos.CENTER);
 
 		// Sets the action for deleting an activity
 		delete_activity.setOnAction(e -> {
@@ -97,7 +89,7 @@ public class ViewActivitiesPage {
 		BorderPane options = new BorderPane();
 		options.setLeft(activity_details);
 		options.setRight(delete_activity);
-		options.setCenter(locationAndDate);
+		options.setCenter(dateTimeLocationLabel);
 
 		// Stores and displays activity name
 		Label activity_name = new Label(activity.title);

@@ -1,5 +1,7 @@
 runApp: TrainLogApp.class
-	java --module-path javafx/lib --add-modules javafx.controls,javafx.fxml -cp .:./gson.jar:controlsfx.jar TrainLogApp
+	java --module-path javafx/lib --add-modules javafx.controls,javafx.fxml \
+	--add-exports=javafx.base/com.sun.javafx.event=ALL-UNNAMED \
+	-cp .:./gson.jar:controlsfx.jar TrainLogApp
 TrainLogApp.class: TrainLogApp.java Styles/NewActivityStyle.class ButtonActions/NewActivityPage.class ButtonActions/QuitPage.class Styles/GeneralStyle.class ButtonActions/Activity.class ButtonActions/ActivityManager.class ButtonActions/ViewActivitiesPage.class
 	javac --module-path javafx/lib --add-modules javafx.controls,javafx.fxml -cp .:./gson.jar:controlsfx.jar TrainLogApp.java
 ButtonActions/Activity.class: ButtonActions/Activity.java
@@ -13,7 +15,8 @@ Styles/GeneralStyle.class: Styles/GeneralStyle.java
 ButtonActions/QuitPage.class: ButtonActions/QuitPage.java	
 	javac --module-path javafx/lib --add-modules javafx.controls,javafx.fxml ButtonActions/QuitPage.java
 ButtonActions/NewActivityPage.class: ButtonActions/NewActivityPage.java	
-	javac --module-path javafx/lib --add-modules javafx.controls,javafx.fxml -cp .:./gson.jar ButtonActions/NewActivityPage.java
+	javac --module-path javafx/lib --add-modules javafx.controls,javafx.fxml \
+	-cp .:./gson.jar:controlsfx.jar ButtonActions/NewActivityPage.java
 ButtonActions/ViewActivitiesPage.class: ButtonActions/ViewActivitiesPage.java
 	javac --module-path javafx/lib --add-modules javafx.controls,javafx.fxml ButtonActions/ViewActivitiesPage.java
 
