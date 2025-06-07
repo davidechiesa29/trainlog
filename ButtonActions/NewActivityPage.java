@@ -25,8 +25,11 @@ public class NewActivityPage {
 	// Labels for each activity field
 	private static Label activityNameLabel, activityDescriptionLabel, distanceLabel, durationLabel, heartrateLabel, locationLabel, dateAndTimeLabel, runTypeLabel, weatherDataLabel, dynamicTitleLabel;
 
-	// Used to store the possible locations a user can pick for their activity
-	private static List<String> locationSuggestions;
+	// Used to store the possible locations a user can pick for their activity, along with the coordinates for each location
+	private static List<String> locations = new ArrayList<String>(); 
+
+	// Used to store the suggestions for locations that the user can select
+	private static List<String> locationSuggestions = new ArrayList<String>();
 
 	public static void create(StackPane root) {
 
@@ -239,7 +242,6 @@ public class NewActivityPage {
 
 	        locationField = new TextField("No Location");
 
-		generateLocations(); 			
 		TextFields.bindAutoCompletion(locationField, locationSuggestions);
 
 		NewActivityStyle.styleNewActivityText(locationField);
@@ -247,9 +249,7 @@ public class NewActivityPage {
 		return new VBox(locationLabel, locationField);
 	}
 
-	private static void generateLocations() {
-
-		locationSuggestions = new ArrayList<>();
+	public static void generateLocations() {
 
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader("ButtonActions/us_cities/uscities.csv"));
@@ -260,8 +260,12 @@ public class NewActivityPage {
 			while (line != null) {
 				String[] info = line.split(",");
 				String city_name = info[0].substring(1, info[0].length()-1);
-				String state_name = info[2].substring(1, info[2].length()-1);
-				locationSuggestions.add(city_name + ", " + state_name);
+				String state_initials = info[2].substring(1, info[2].length()-1);
+				String state_name = info[3].substring(1, info[3].length()-1);
+				String latitude = info[6].substring(1, info[6].length()-1);
+				String longitude = info[7].substring(1, info[7].length()-1);
+				locations.add(city_name + "," + state_initials + "," + state_name + "," + latitude + "," + longitude);
+				locationSuggestions.add(city_name + ", " + state_initials);
 				line = reader.readLine();
 			}
 		} catch (FileNotFoundException e){
@@ -270,7 +274,7 @@ public class NewActivityPage {
 			System.out.println("Failure parsing the file");
 		} catch (Exception e) {
 			System.out.println("Unexpected exception caught");
-		}	
+		}
 
 	}
 
@@ -430,7 +434,8 @@ public class NewActivityPage {
 
 				// Verifies that a proper location was entered and stores it
 				String location = locationField.getText();
-				if (!location.equals("No Location") && !locationSuggestions.contains(location)) location = "No Location"; 
+				if (!location.equals("No Location") && !locationSuggestions.contains(location)) location = "No Location";
+			       	else if (locationSuggestions.contains(location)) location = locations.get(locationSuggestions.indexOf(location));	
 
 				String date = month.getValue() + "-" + day.getValue() + "-" + year.getValue();
 				String time = currentHour.getValue() + "-" + currentMin.getValue() + "-" + amOrPm.getValue();

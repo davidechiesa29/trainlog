@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.*;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 public class Activity implements Comparable<Activity> {
 
@@ -18,6 +20,7 @@ public class Activity implements Comparable<Activity> {
 	public String runType;
 	public boolean weatherData;
 	public boolean dynamicTitle;
+	public String locationData;
 
 	/**
 	 * Stores all of the necessary information for the activity
@@ -28,13 +31,17 @@ public class Activity implements Comparable<Activity> {
 		this.duration = duration;
 		this.heartrate = heartrate;
 		this.description = description;
-		this.location = location;
+		this.location = parseDisplayedLocation(location);
 		this.date = date;
 		this.time = time;
 		this.runType = runType;
 		this.weatherData = weatherData;
 		this.dynamicTitle = dynamicTitle;
 		this.title = title;
+		this.locationData = location;
+		System.out.println(locationData);
+
+		generateActivityWeather(this);
 
 		// Replaces the previous title with an AI-generated one if requested by the user
 		if (this.dynamicTitle == true) this.title = generateActivityTitle(this);
@@ -117,6 +124,13 @@ public class Activity implements Comparable<Activity> {
 		return "1";
 	}
 
+	private String parseDisplayedLocation(String location){
+		
+		if (location.equals("No Location")) return location;
+		String[] parsed = location.split(",");
+		return parsed[0] + ", " + parsed[1];
+	}
+
 	/**
 	 * Creates an AI-Generated title for an activity, getting inspiration from the activity time, heart-rate, distance, duration, and run-type
 	 */
@@ -124,7 +138,8 @@ public class Activity implements Comparable<Activity> {
 
 		
 		// Stores API key to access openAI API
-		String apiKey = "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";
+		String apiKey = "sk-proj-kizqVyvb1ualfWfFHgdERP8EvOn8REaKtKDw-04ZvPHMon5b5zP5uuPugx9afz" +
+			"_jjemtWvYky_T3BlbkFJ6gNiZJ_20TGKt38nebeAxbocBeAdFrz5k6RPMLuHhn0lL9a9LYCTkzM8Un55hafOqELQ4TfZgA";
 
 		// Generates the body of the request that will be sent to chatGPT in JSON format
 		String body = """
@@ -137,6 +152,7 @@ public class Activity implements Comparable<Activity> {
 				}
 			]
 		}""";
+
 		body = body.replace("placeholder",generatePrompt(a)); 
 
 		// Formally creates the reqeust, specifying the API key 
@@ -158,7 +174,6 @@ public class Activity implements Comparable<Activity> {
 
 		// Returns default activity title if dynamic title generation failed
 		return "Daily Run";
-
 
 	}
 
@@ -202,6 +217,29 @@ public class Activity implements Comparable<Activity> {
 
 	}
 
+	private static String generateActivityWeather(Activity activity) {
+		
+
+		String date = activity.date;
+
+		System.out.println(date);
 
 
+
+
+		String historicalKey = "https://archive-api.open-meteo.com/v1/archive?latitude=52.52&longitude=13.41&start_date=2025-06-04&end_date=2025-06-04" + 
+			"&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation";
+
+
+		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(historicalKey)).GET().build();
+
+		try {
+	       		HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+			System.out.println(response.body());
+		} catch (Exception e) {
+			System.out.println("Error caught. Unable to retrieve weather data.");
+		}
+
+		return "";	
+	}
 }

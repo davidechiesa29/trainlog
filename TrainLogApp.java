@@ -106,6 +106,7 @@ public class TrainLogApp extends Application {
 
 			// Handles events triggered when pressing the new activity button
 			// Creates a new page that allows the user to upload a manual
+			NewActivityPage.generateLocations();
 			newActivity.setOnAction(event -> NewActivityPage.create(root));
 
 			// Handles events triggered when pressing the view activities button
