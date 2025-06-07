@@ -39,12 +39,16 @@ public class Activity implements Comparable<Activity> {
 		this.dynamicTitle = dynamicTitle;
 		this.title = title;
 		this.locationData = location;
-		System.out.println(locationData);
 
-		generateActivityWeather(this);
+		if (weatherData) {
+			if (!this.description.trim().equals("")){
+				this.description += "\n\n";
+			}
+			this.description += generateActivityWeather(this);	
+		}
 
 		// Replaces the previous title with an AI-generated one if requested by the user
-		if (this.dynamicTitle == true) this.title = generateActivityTitle(this);
+		if (this.dynamicTitle) this.title = generateActivityTitle(this);
 	}
 
 	/**
@@ -101,16 +105,16 @@ public class Activity implements Comparable<Activity> {
 	/**
 	 * Returns integer value corresponding to each month
 	 */
-	private String convertMonthToInteger(String s){
-		if (s.equals("January")) return "1";
-		if (s.equals("Febuary")) return "2";
-		if (s.equals("March")) return "3";
-		if (s.equals("April")) return "4";
-		if (s.equals("May")) return "5";
-		if (s.equals("June")) return "6";
-		if (s.equals("July")) return "7";
-		if (s.equals("August")) return "8";
-		if (s.equals("September")) return "9";
+	private static String convertMonthToInteger(String s){
+		if (s.equals("January")) return "01";
+		if (s.equals("Febuary")) return "02";
+		if (s.equals("March")) return "03";
+		if (s.equals("April")) return "04";
+		if (s.equals("May")) return "05";
+		if (s.equals("June")) return "06";
+		if (s.equals("July")) return "07";
+		if (s.equals("August")) return "08";
+		if (s.equals("September")) return "09";
 		if (s.equals("October")) return "10";
 		if (s.equals("November")) return "11";
 		return "12";
@@ -119,12 +123,12 @@ public class Activity implements Comparable<Activity> {
 	/**
 	 * Returns integer value corresponding to 'AM' or 'PM'
 	 */
-	private String convertTimeToInteger(String s){
+	private static String convertTimeToInteger(String s){
 		if (s.equals("AM")) return "0";
 		return "1";
 	}
 
-	private String parseDisplayedLocation(String location){
+	private static String parseDisplayedLocation(String location){
 		
 		if (location.equals("No Location")) return location;
 		String[] parsed = location.split(",");
@@ -219,27 +223,95 @@ public class Activity implements Comparable<Activity> {
 
 	private static String generateActivityWeather(Activity activity) {
 		
+		// Returns no weather data if there is no activity location
+		if (activity.location.equals("No Location")) return "";
 
-		String date = activity.date;
+		String apiKey = "";
 
-		System.out.println(date);
+		// Gets the activity date along with the current date
+		String date = convertDate(activity.date);
+		LocalDate activityDate = LocalDate.parse(date);
+		LocalDate currentDate = LocalDate.now();
 
+		// Returns no weather data if the activity date is in the future
+		if (ChronoUnit.DAYS.between(currentDate, activityDate) >= 1) return "";
 
+		// Gets coordinates of activity location
+		String[] parsed = activity.locationData.split(",");
+		String latitude = parsed[3];
+		String longitude = parsed[4];
 
+		// Handles case in which historical weather data needs to be accessed
+		if (ChronoUnit.DAYS.between(currentDate, activityDate) < -1) {	
+		
+			// Creates the key	
+			apiKey = "https://archive-api.open-meteo.com/v1/archive?latitude=" + latitude + "&longitude=" + longitude + 
+			"&start_date=" + date + "&end_date=" + date + 
+			"&hourly=temperature_2m,relative_humidity_2m,apparent_temperature&temperature_unit=fahrenheit";
+		}
+		
+		// Handles case in which modern weather data needs to be accessed
+		else {
 
-		String historicalKey = "https://archive-api.open-meteo.com/v1/archive?latitude=52.52&longitude=13.41&start_date=2025-06-04&end_date=2025-06-04" + 
-			"&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation";
+			// Creates the key
+			apiKey = "https://api.open-meteo.com/v1/forecast?latitude=" + latitude + "&longitude=" + longitude +
+				"&hourly=temperature_2m,relative_humidity_2m,apparent_temperature&" + 
+				"temperature_unit=fahrenheit&start_date=" + date + "&end_date=" + date;
+		}
 
+		// Creates HTTP request to send to the api using the created key
+		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(apiKey)).GET().build();
 
-		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(historicalKey)).GET().build();
+		String weatherInfo = "";
 
+		// Calculates the hour of the activity in military time
+		int activityHour = Integer.parseInt(activity.time.split("-")[0]);
+		if (activity.time.split("-")[2].equals("AM") && activityHour == 12)
+			activityHour = 0;
+		else if (activity.time.split("-")[2].equals("PM") && activityHour != 12)
+			activityHour += 12;
+		if (Integer.parseInt(activity.time.split("-")[1]) > 29) activityHour = (activityHour + 1)%24;
+
+		// Attempts to retrieve response from the API
 		try {
 	       		HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-			System.out.println(response.body());
+			Gson gson = new Gson();
+		        Weather weatherOutput =  gson.fromJson(response.body(),new TypeToken<Weather>(){});
+			return "Temp: " + Math.round(weatherOutput.hourly.temperature_2m[activityHour]) + " °F , Humidity: " +
+				weatherOutput.hourly.relative_humidity_2m[activityHour] + "% , Feels Like: " +
+				Math.round(weatherOutput.hourly.apparent_temperature[activityHour]) + "°F";
+
 		} catch (Exception e) {
 			System.out.println("Error caught. Unable to retrieve weather data.");
 		}
 
-		return "";	
+		return weatherInfo;	
 	}
+
+	private static String convertDate(String date) {
+
+		String[] parsed = date.split("-");
+		parsed[0] = convertMonthToInteger(parsed[0]);
+
+		if (Integer.valueOf(parsed[1]) < 10) parsed[1] = "0" + parsed[1];
+
+		return parsed[2] + "-" + parsed[0] + "-" + parsed[1];
+
+	}
+
+
+	class Weather {
+
+		HourlyWeather hourly;
+
+		class HourlyWeather {
+		
+			float[] temperature_2m;
+			int[] relative_humidity_2m;
+			float[] apparent_temperature;	
+		}
+	
+	}
+
+
 }
