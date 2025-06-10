@@ -82,8 +82,21 @@ public class ViewStatisticsPage {
 		mileageChart.setTitle("Weekly Mileage");
 		mileageChart.setLegendVisible(false);
 
+		Label percentage = createPercentageLabel((float)weeklyMileageData[10], (float)weeklyMileageData[11]);
+		Label changeTitle = new Label("Change from Last Week");
+		changeTitle.setStyle("-fx-font-weight: Bold");
+		VBox mileageIncreaseBox = new VBox(changeTitle, percentage);
 
-		VBox statistics = new VBox(exit, mileageChart);
+		Label longestRunLabel = new Label("Longest Run This Week");
+		longestRunLabel.setStyle("-fx-font-weight: Bold");
+		Label longestRun = findLongestRun();
+		VBox longestRunBox = new VBox(longestRunLabel, longestRun);
+
+		HBox tileInfo = new HBox(mileageIncreaseBox, longestRunBox);
+		tileInfo.setSpacing(20);
+
+
+		VBox statistics = new VBox(exit, mileageChart, tileInfo);
 		VBox.setMargin(mileageChart, new Insets(20));
 		VBox.setMargin(exit, new Insets(20));
 
@@ -97,6 +110,71 @@ public class ViewStatisticsPage {
 		root.getChildren().add(statisticsPage);
 
 
+	}
+
+	private static Label createPercentageLabel(float first, float second) {
+		Label l = new Label();
+		int percentage = 0;
+
+		if (first > second) {
+		       	if (second != 0)	
+			percentage = Math.round(((first-second)/second)*100);
+			l.setText("↓ " + percentage + "% ");
+			l.setStyle("-fx-text-fill: rgb(219,74,64);" +
+				   "-fx-font-weight: Bold;" +
+				   "-fx-font-size: 24px;");
+		}
+		else if (second > first) {
+			if (first != 0)
+			percentage = Math.round(((second-first)/first)*100);
+			l.setText("↑ " + percentage + "% ");
+			l.setStyle("-fx-text-fill: Green;" +
+				   "-fx-font-weight: Bold;" +
+				   "-fx-font-size: 24px;");
+
+		}
+		else {
+			l.setText("-- % ");
+			l.setStyle("-fx-text-fill: Gray;" +
+				   "-fx-font-weight: Bold;" +
+				   "-fx-font-size: 24px;");
+			
+		}
+		return l;
+	}
+
+	private static Label findLongestRun(){
+		
+		PriorityQueue<Activity> activities = new PriorityQueue<>(ActivityManager.getAll());
+		
+		LocalDate startOfWeek = LocalDate.now();
+		while (startOfWeek.getDayOfWeek() != DayOfWeek.MONDAY) {
+			startOfWeek = startOfWeek.minusDays(1);
+		}
+
+		List<Double> distances = new ArrayList<>();
+		
+		while (!activities.isEmpty()){
+			Activity a = activities.poll();
+			LocalDate activityDate = LocalDate.parse(Activity.convertDate(a.date));
+			if (activityDate.isBefore(startOfWeek)) break;
+			else distances.add(a.distance);
+			
+		}
+
+		Collections.sort(distances);
+		
+		String longest = "--";
+		if (distances.size() > 0){
+			longest = ""+distances.get(distances.size()-1);
+		}
+
+		Label l = new Label(""+longest);
+		l.setStyle("-fx-text-fill: Green;"+
+			   "-fx-font-weight: Bold;"+
+			   "-fx-font-size: 24px;");
+
+		return l;
 	}
 
 }
