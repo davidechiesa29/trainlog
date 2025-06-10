@@ -113,6 +113,10 @@ public class TrainLogApp extends Application {
 			// Creates a new page that allows the user to scroll through saved activities
 			viewActivities.setOnAction(event -> ViewActivitiesPage.create(root));
 
+			// Handles events triggered when pressing the view statistics button
+			// Creates a new page
+			statistics.setOnAction(event -> ViewStatisticsPage.create(root));
+
 			// Handles event in which quit button is pressed
 			// Creates a small menu that allows user to confirm their quit request
 			quit.setOnAction(event -> QuitPage.create(root));
@@ -129,6 +133,7 @@ public class TrainLogApp extends Application {
 			BorderPane home = new BorderPane();
 			home.setCenter(menu);
 
+			// Creates label attributing simple maps for city data used for selecting activity location
 			Label attribution = new Label("City data © SimpleMaps.com");
 			attribution.setStyle("-fx-font-size: 14px; -fx-text-fill: White; -fx-font-weight: Bold");
 			BorderPane.setMargin(attribution, new Insets(10));
