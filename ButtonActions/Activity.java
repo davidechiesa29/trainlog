@@ -288,7 +288,7 @@ public class Activity implements Comparable<Activity> {
 		return weatherInfo;	
 	}
 
-	private static String convertDate(String date) {
+	public static String convertDate(String date) {
 
 		String[] parsed = date.split("-");
 		parsed[0] = convertMonthToInteger(parsed[0]);
