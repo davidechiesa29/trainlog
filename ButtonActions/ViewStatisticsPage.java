@@ -99,6 +99,7 @@ public class ViewStatisticsPage {
 		VBox statistics = new VBox(exit, mileageChart, tileInfo);
 		VBox.setMargin(mileageChart, new Insets(20));
 		VBox.setMargin(exit, new Insets(20));
+		VBox.setMargin(tileInfo, new Insets(20));
 
 		statistics.setAlignment(Pos.CENTER);
 		statistics.setStyle("-fx-background-color: White;");
@@ -169,7 +170,7 @@ public class ViewStatisticsPage {
 			longest = ""+distances.get(distances.size()-1);
 		}
 
-		Label l = new Label(""+longest);
+		Label l = new Label(""+longest+ " mi");
 		l.setStyle("-fx-text-fill: Green;"+
 			   "-fx-font-weight: Bold;"+
 			   "-fx-font-size: 24px;");

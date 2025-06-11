@@ -68,7 +68,7 @@ public class ViewActivitiesPage {
 
 
 		// Creates the buttons for checking the activity details or deleting a specific activity
-		Button delete_activity = new Button("Delete");
+		Button edit_activity = new Button("Edit");
 		Button activity_details = new Button("Details");
 
 		// Creates the label containing the date and time (and possibly location) of the activity
@@ -79,7 +79,7 @@ public class ViewActivitiesPage {
 		dateTimeLocationLabel.setAlignment(Pos.CENTER);
 
 		// Sets the action for deleting an activity
-		delete_activity.setOnAction(e -> {
+		edit_activity.setOnAction(e -> {
 			ActivityManager.remove(activity);
 			rootReference.getChildren().remove(viewActivitiesPage);
 			create(rootReference); 
@@ -142,7 +142,7 @@ public class ViewActivitiesPage {
 		if (!activity.runType.equals("Unspecified")) quickStats.getChildren().add(displayType);
 
 		quickStats.setSpacing(25);
-		Image mapArt = new Image("/Images/default_map.png", 562, 384, false, true);
+		Image mapArt = new Image("/Images/map_art.png", 562, 384, false, true);
 		ImageView map = new ImageView();
 		map.setImage(mapArt);
 		
