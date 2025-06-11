@@ -12,6 +12,7 @@ import javafx.scene.layout.*;
 import javafx.scene.effect.*;
 import javafx.scene.paint.*;
 import javafx.scene.*;
+import javafx.scene.image.*;
 import org.controlsfx.control.textfield.TextFields;
 
 public class NewActivityPage {
@@ -35,13 +36,16 @@ public class NewActivityPage {
 
 		BorderPane newActivityPage = new BorderPane();
 
+		// Adds background to the page
+		GeneralStyle.setBackgroundImage(newActivityPage, "Images/map_art.png");
+
 		// Creates the save and cancel buttons for the activity
 		Button cancelButton = new Button("Cancel");
 		Button saveButton = new Button("Save Activity");
 
 		// Styles save and cancel buttons (without shadow)
 		List<Button> saveCancelButtons = new ArrayList<>(Arrays.asList(cancelButton, saveButton));
-		GeneralStyle.setButtonAnimation(saveCancelButtons, false);
+		GeneralStyle.setButtonAnimation(saveCancelButtons, false,20);
 
 		// Creates controls to enter the name of the new activity
 		VBox activityNameControl = createActivityNameControl();
@@ -110,7 +114,7 @@ public class NewActivityPage {
 
 		newActivityPage.setCenter(activity);
 		activity.setAlignment(Pos.CENTER);
-		newActivityPage.setStyle("-fx-background-color: rgb(219,74,64);");
+		//newActivityPage.setStyle("-fx-background-color: rgb(219,74,64);");
 		root.getChildren().add(newActivityPage);
 
 		// Makes sure that the activity window uses up the smallest size possible
@@ -408,7 +412,7 @@ public class NewActivityPage {
 		saveOrCancelMenu.setCenter(menu);
 		menu.setAlignment(Pos.CENTER);
 		menu.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-		GeneralStyle.setButtonAnimation(buttons, false);
+		GeneralStyle.setButtonAnimation(buttons, false,20);
 		root.getChildren().add(saveOrCancelMenu);	
 
                 menu.setEffect(new DropShadow(4.0,2.0,2.0, Color.BLACK));

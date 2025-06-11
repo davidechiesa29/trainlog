@@ -72,9 +72,6 @@ public class TrainLogApp extends Application {
 
 			StackPane root = new StackPane();			
 	
-			// Creates the background for the home page
-			Image image = new Image("Images/Background5.png");
-			BackgroundImage background = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(1000, 650, true, true, false, true));		
 			// Creates buttons on the home screen and application name
 			Label appName = new Label("RunStata");
 			Button newActivity = new Button("Log Activity");
@@ -102,7 +99,7 @@ public class TrainLogApp extends Application {
 			appName.setEffect(appNameShadow);
 	
 			// Sets styling and effects for when buttons are hovered over or pressed, including shadows
-			GeneralStyle.setButtonAnimation(menuButtons, true);
+			GeneralStyle.setButtonAnimation(menuButtons, true, 20);
 
 			// Handles events triggered when pressing the new activity button
 			// Creates a new page that allows the user to upload a manual
@@ -140,7 +137,7 @@ public class TrainLogApp extends Application {
 			home.setBottom(attribution);
 
 			home.setMargin(menu, new Insets(0,0,100,0));
-			home.setBackground(new Background(background));
+			GeneralStyle.setBackgroundImage(home,"Images/Background5.png");
 
 			root.getChildren().add(home);
 			stage.setScene(new Scene(root, 1000, 650));

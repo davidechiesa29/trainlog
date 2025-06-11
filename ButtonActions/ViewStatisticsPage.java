@@ -21,11 +21,12 @@ public class ViewStatisticsPage {
 	public static void create(StackPane root){
 
 		BorderPane statisticsPage = new BorderPane();
+		GeneralStyle.setBackgroundImage(statisticsPage, "Images/map_art.png");
 
 		Button exit = new Button("Return to Main Menu");
 		exit.setOnAction(e -> root.getChildren().remove(statisticsPage));
 		List<Button> buttons = Arrays.asList(exit);
-		GeneralStyle.setButtonAnimation(buttons, false);
+		GeneralStyle.setButtonAnimation(buttons, false,20);
 
 		CategoryAxis xAxis = new CategoryAxis();
 		NumberAxis yAxis = new NumberAxis();
@@ -106,7 +107,6 @@ public class ViewStatisticsPage {
 		statistics.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 
 		statisticsPage.setCenter(statistics);
-		statisticsPage.setStyle("-fx-background-color: rgb(219,74,64);");
 
 		root.getChildren().add(statisticsPage);
 

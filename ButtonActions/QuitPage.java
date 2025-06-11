@@ -23,7 +23,7 @@ public class QuitPage {
 		List<Button> quitButtons = Arrays.asList(yes, no);
 
 		// Styles the buttons so that they correspond with the rest of the app, with the appropriate colors (but w/o shadow)
-		GeneralStyle.setButtonAnimation(quitButtons, false);
+		GeneralStyle.setButtonAnimation(quitButtons, false, 20);
 
 		// Completes more specialized styling of the quit buttons, modifying size and margins
 		for (Button b : quitButtons) {

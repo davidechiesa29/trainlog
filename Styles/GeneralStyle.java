@@ -4,16 +4,19 @@ import javafx.scene.effect.*;
 import javafx.scene.paint.*;
 import javafx.scene.control.*;
 import java.util.*;
+import javafx.scene.image.*;
+import javafx.scene.*;
+import javafx.scene.layout.*;
 
 public class GeneralStyle {
 
-	public static void setButtonAnimation(List<Button> buttons, boolean shadow) {
+	public static void setButtonAnimation(List<Button> buttons, boolean shadow, int font_size) {
 		
 		// Base style for the buttons
     		String base = "-fx-background-color: rgb(219,74,64);" +
                 "-fx-background-radius: 10px;" +
                 "-fx-font-weight: bold;" +
-                "-fx-font-size: 20px;" +
+                "-fx-font-size: " + font_size + "px;" +
                 "-fx-font-family: 'Sans Serif';" +
                 "-fx-text-fill: rgb(255,214,215);";
 
@@ -36,6 +39,15 @@ public class GeneralStyle {
     			b.setOnMousePressed(e -> b.setStyle(pressed));
     			b.setOnMouseReleased(e -> b.setStyle(hover));
 		}
+	}
+
+	public static void setBackgroundImage(BorderPane root, String imageToUse) {
+
+		// Adds background to the page
+		Image image = new Image(imageToUse);
+                BackgroundImage background = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(1000, 650, true, true, false, true));
+		root.setBackground(new Background(background));
+
 	}
 
 }

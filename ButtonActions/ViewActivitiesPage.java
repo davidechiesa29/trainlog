@@ -26,11 +26,13 @@ public class ViewActivitiesPage {
 
 		// Creates the page itself
 		viewActivitiesPage = new BorderPane();
-		viewActivitiesPage.setStyle("-fx-background-color: rgb(219,74,64);");
+
+		// Adds background to the page
+		GeneralStyle.setBackgroundImage(viewActivitiesPage, "Images/map_art.png");
 
 		Button escape = new Button("Return to Main Menu");
 		List<Button> buttons = Arrays.asList(escape);
-		GeneralStyle.setButtonAnimation(buttons, false);
+		GeneralStyle.setButtonAnimation(buttons, false,20);
 		escape.setOnAction(e -> root.getChildren().remove(viewActivitiesPage));
 
 		Label noActivities = new Label("No activities have currently been logged.");
@@ -70,6 +72,8 @@ public class ViewActivitiesPage {
 		// Creates the buttons for checking the activity details or deleting a specific activity
 		Button edit_activity = new Button("Edit");
 		Button activity_details = new Button("Details");
+		List<Button> buttons = Arrays.asList(edit_activity, activity_details);
+		GeneralStyle.setButtonAnimation(buttons, false, 12);
 
 		// Creates the label containing the date and time (and possibly location) of the activity
 		String dateTimeLocation = parseActivityDate(activity.date) + " @ " + parseActivityTime(activity.time);
@@ -77,6 +81,7 @@ public class ViewActivitiesPage {
 		if (!activity.location.equals("No Location")) dateTimeLocation = activity.location + " - " + dateTimeLocation;
 		Label dateTimeLocationLabel = new Label(dateTimeLocation);
 		dateTimeLocationLabel.setAlignment(Pos.CENTER);
+		dateTimeLocationLabel.setStyle("-fx-font-family: 'Sans-serif';");
 
 		// Sets the action for deleting an activity
 		edit_activity.setOnAction(e -> {
@@ -88,7 +93,7 @@ public class ViewActivitiesPage {
 		// Combines the delete and details button, and time/date label into one box
 		BorderPane options = new BorderPane();
 		options.setLeft(activity_details);
-		options.setRight(delete_activity);
+		options.setRight(edit_activity);
 		options.setCenter(dateTimeLocationLabel);
 
 		// Stores and displays activity name
