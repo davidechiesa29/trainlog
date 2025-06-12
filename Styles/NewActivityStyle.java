@@ -43,10 +43,10 @@ public class NewActivityStyle {
 				  "-fx-padding: 20 20 20 20;" +
 				  "-fx-background-radius: 20px;");
 		DropShadow activityMenuShadow = new DropShadow();
-		activityMenuShadow.setOffsetX(2.0);
-		activityMenuShadow.setOffsetY(2.0);
-		activityMenuShadow.setColor(Color.BLACK);
-		activityMenuShadow.setRadius(4.0);
+		activityMenuShadow.setOffsetX(1.0);
+		activityMenuShadow.setOffsetY(1.0);
+		activityMenuShadow.setColor(Color.GRAY);
+		activityMenuShadow.setRadius(1.0);
 		activityMenu.setEffect(activityMenuShadow);
 	}
 

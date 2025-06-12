@@ -301,7 +301,7 @@ public class NewActivityPage {
 		year = new ComboBox<>();
 		year.getSelectionModel().select(Integer.valueOf(Year.now().getValue()));
 		ObservableList<Integer> years = FXCollections.observableArrayList();
-		for (int i = 2020; i <= Year.now().getValue(); i++) years.add(i);
+		for (int i = Year.now().getValue(); i >= 1920; i--) years.add(i);
 		year.setItems(years);
 
 		// Handles upload hour

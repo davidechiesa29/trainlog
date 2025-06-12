@@ -186,7 +186,7 @@ public class ViewActivitiesPage {
 
 		activityBox.setStyle("-fx-background-color: White;"+
 				     "-fx-background-radius: 10px;");
-		activityBox.setEffect(new DropShadow(1,1,1,Color.WHITE));
+		activityBox.setEffect(new DropShadow(1,1,1,Color.GRAY));
 		activityBox.setPadding(new Insets(20));
 		activityBox.setPrefHeight(Region.USE_PREF_SIZE);
 		activityBox.setPrefWidth(600);
@@ -199,7 +199,29 @@ public class ViewActivitiesPage {
 	}
 
 	private static void createFilterMenu() {
+	
+		Label options = new Label("Filter Options");
+	
+		Button save = new Button("Save");
+		Button cancel = new Button("Cancel");
+		BorderPane saveOrCancelBox = new BorderPane();
+		saveOrCancelBox.setLeft(cancel);
+		saveOrCancelBox.setRight(save);
+		
 
+		ComboBox<String> typeOption = new ComboBox<>();
+		typeOption.getItems().addAll("Recovery","Workout","Long Run", "Race");
+		
+
+		VBox filterMenu = new VBox(options, typeOption, saveOrCancelBox);
+		filterMenu.setStyle("-fx-background-color: White;");
+		filterMenu.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+		save.setOnAction(e -> rootReference.getChildren().remove(filterMenu));
+		cancel.setOnAction(e ->rootReference.getChildren().remove(filterMenu));
+		filterMenu.setAlignment(Pos.CENTER);
+
+		rootReference.getChildren().add(filterMenu);
+		
 	}
 
 	private static VBox generateActivityPace(double distance, int duration) {
