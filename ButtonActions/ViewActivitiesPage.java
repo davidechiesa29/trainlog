@@ -18,32 +18,47 @@ import javafx.scene.text.*;
 public class ViewActivitiesPage {
 
 	private static StackPane rootReference;
-	private static BorderPane viewActivitiesPage;
+	private static VBox viewActivitiesPage;
 
 	public static void create(StackPane root) {
 		
 		rootReference = root;
 
 		// Creates the page itself
-		viewActivitiesPage = new BorderPane();
+		viewActivitiesPage = new VBox();
 
 		// Adds background to the page
 		GeneralStyle.setBackgroundImage(viewActivitiesPage, "Images/map_art.png");
 
+		// Creates options to either return to the main menu or filter the activities
 		Button escape = new Button("Return to Main Menu");
-		List<Button> buttons = Arrays.asList(escape);
+		Button filter = new Button("Filter");
+
+		// Styles the filter and main menu buttons and adds their actions when pressed
+		List<Button> buttons = Arrays.asList(escape, filter);
 		GeneralStyle.setButtonAnimation(buttons, false,20);
 		escape.setOnAction(e -> root.getChildren().remove(viewActivitiesPage));
+		filter.setOnAction(e -> createFilterMenu());
 
+		// Combines the menu and filter buttons into an HBox and styles the box
+		HBox menuOptions = new HBox(escape, filter);
+		HBox.setMargin(escape, new Insets(25));
+		HBox.setMargin(filter, new Insets(25));
+		menuOptions.setAlignment(Pos.CENTER);
+		menuOptions.setMaxWidth(800);
+		menuOptions.setStyle("-fx-background-color:rgb(245,245,245);");
+
+		// Creates label to be displayed when no activities are logged
 		Label noActivities = new Label("No activities have currently been logged.");
 		noActivities.setStyle("-fx-text-fill: rgb(219,74,64); -fx-font-weight: Bold; -fx-font-family: 'Sans-serif'; -fx-font-size: 24px;");
 		VBox.setMargin(noActivities, new Insets(20));
 
-		VBox scrollableList = new VBox(escape);
-		VBox.setMargin(escape, new Insets(20));
+		// Creates the box containing the activities that have been logged
+		VBox scrollableList = new VBox();
 		scrollableList.setStyle("-fx-background-color: rgb(245,245,245);");
 		scrollableList.setAlignment(Pos.CENTER);
 
+		// Adds each activity to the box of activities
 		PriorityQueue<Activity> activities = new PriorityQueue<>(ActivityManager.getAll());
 		if (activities.isEmpty())
 			scrollableList.getChildren().add(noActivities);
@@ -52,15 +67,26 @@ public class ViewActivitiesPage {
 				scrollableList.getChildren().add(createViewableActivity(activities.poll()));
 		}
 
+		// Wraps the vertical box containing the activities in a scroll pane so that it is scrollable, and styles it
 		ScrollPane scrollBox = new ScrollPane(scrollableList);
 		scrollBox.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 		scrollBox.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 		scrollBox.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 		scrollBox.setFitToWidth(true);
+		scrollBox.getStyleClass().clear();
 
-		viewActivitiesPage.setCenter(scrollBox);
-		scrollableList.setPrefWidth(650);
-		scrollableList.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+		// Wraps the options and the scroll pane into one vertical box and styles it
+		VBox scrollBoxAndOptions = new VBox(menuOptions, scrollBox);
+		scrollBoxAndOptions.setAlignment(Pos.TOP_CENTER);
+		scrollBoxAndOptions.setMaxWidth(800);
+		scrollBoxAndOptions.setStyle("-fx-background-color: rgb(245,245,245);");
+		scrollBoxAndOptions.setEffect(new DropShadow(1.0,1.0,1.0,Color.GRAY));
+		VBox.setVgrow(scrollBoxAndOptions, Priority.ALWAYS);
+
+		// Sets the vertical box at the top center of the page
+		viewActivitiesPage.getChildren().add(scrollBoxAndOptions);
+		viewActivitiesPage.setAlignment(Pos.TOP_CENTER);
+
 		root.getChildren().add(viewActivitiesPage);
 
 	}
@@ -159,8 +185,8 @@ public class ViewActivitiesPage {
 		//		activityBox.getChildren().add(map);
 
 		activityBox.setStyle("-fx-background-color: White;"+
-				     "-fx-background-radius: 20px;");
-		activityBox.setEffect(new DropShadow(4,2,2,Color.BLACK));
+				     "-fx-background-radius: 10px;");
+		activityBox.setEffect(new DropShadow(1,1,1,Color.WHITE));
 		activityBox.setPadding(new Insets(20));
 		activityBox.setPrefHeight(Region.USE_PREF_SIZE);
 		activityBox.setPrefWidth(600);
@@ -170,6 +196,10 @@ public class ViewActivitiesPage {
 		VBox.setMargin(activityBox, new Insets(25));
 		VBox.setMargin(options, new Insets(0,0,10,0));
 		return activityBox;
+	}
+
+	private static void createFilterMenu() {
+
 	}
 
 	private static VBox generateActivityPace(double distance, int duration) {
@@ -192,7 +222,7 @@ public class ViewActivitiesPage {
 		else 
 			formattedPace += "" + secondsPerMile;
 
-		formattedPace += "/mi";
+		formattedPace += " /mi";
 		Label paceLabel = new Label("Pace");
 		Label activity_pace = new Label(formattedPace);
 		activity_pace.setStyle("-fx-font-family: 'Sans-serif'; -fx-font-size: 20px; -fx-font-weight: Bold;");

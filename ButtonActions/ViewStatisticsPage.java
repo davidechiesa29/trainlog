@@ -21,7 +21,7 @@ public class ViewStatisticsPage {
 	public static void create(StackPane root){
 
 		BorderPane statisticsPage = new BorderPane();
-		GeneralStyle.setBackgroundImage(statisticsPage, "Images/map_art.png");
+		GeneralStyle.setBackgroundImage((Pane)statisticsPage, "Images/map_art.png");
 
 		Button exit = new Button("Return to Main Menu");
 		exit.setOnAction(e -> root.getChildren().remove(statisticsPage));
@@ -85,16 +85,23 @@ public class ViewStatisticsPage {
 
 		Label percentage = createPercentageLabel((float)weeklyMileageData[10], (float)weeklyMileageData[11]);
 		Label changeTitle = new Label("Change from Last Week");
-		changeTitle.setStyle("-fx-font-weight: Bold");
+		changeTitle.setStyle("-fx-font-weight: Bold; -fx-font-size: 20px; -fx-font-family: 'Sans-serif';");
 		VBox mileageIncreaseBox = new VBox(changeTitle, percentage);
 
 		Label longestRunLabel = new Label("Longest Run This Week");
-		longestRunLabel.setStyle("-fx-font-weight: Bold");
+		longestRunLabel.setStyle("-fx-font-weight: Bold; -fx-font-size: 20px; -fx-font-family: 'Sans-serif';");
 		Label longestRun = findLongestRun();
 		VBox longestRunBox = new VBox(longestRunLabel, longestRun);
 
-		HBox tileInfo = new HBox(mileageIncreaseBox, longestRunBox);
+		Label totalYearlyMileageLabel = new Label("Year to Date");
+		totalYearlyMileageLabel.setStyle("-fx-font-weight: Bold; -fx-font-size: 20px; -fx-font-family: 'Sans-serif';");
+		Label yearlyMileage = findYearlyMileage();
+		VBox yearlyMileageBox = new VBox(totalYearlyMileageLabel, yearlyMileage);
+	
+
+		HBox tileInfo = new HBox(mileageIncreaseBox, longestRunBox, yearlyMileageBox);
 		tileInfo.setSpacing(20);
+		tileInfo.setAlignment(Pos.CENTER);
 
 
 		VBox statistics = new VBox(exit, mileageChart, tileInfo);
@@ -120,10 +127,11 @@ public class ViewStatisticsPage {
 		if (first > second) {
 		       	if (second != 0)	
 			percentage = Math.round(((first-second)/second)*100);
-			l.setText("↓ " + percentage + "% ");
+			l.setText("↓ " + percentage + "%");
 			l.setStyle("-fx-text-fill: rgb(219,74,64);" +
 				   "-fx-font-weight: Bold;" +
-				   "-fx-font-size: 24px;");
+				   "-fx-font-size: 24px;" +
+				   "-fx-font-family: 'Sans-serif';");
 		}
 		else if (second > first) {
 			if (first != 0)
@@ -141,6 +149,7 @@ public class ViewStatisticsPage {
 				   "-fx-font-size: 24px;");
 			
 		}
+		l.setPadding(new Insets(5, 5, 5, 5));
 		return l;
 	}
 
@@ -175,7 +184,31 @@ public class ViewStatisticsPage {
 			   "-fx-font-weight: Bold;"+
 			   "-fx-font-size: 24px;");
 
+		l.setPadding(new Insets(5, 5, 5, 5));
 		return l;
 	}
+
+	private static Label findYearlyMileage(){
+	
+		Label l = new Label("");	
+		double mileage = 0;
+		PriorityQueue<Activity> activities = new PriorityQueue<>(ActivityManager.getAll());
+
+		LocalDate start = LocalDate.parse((LocalDate.now().getYear()-1)+"-12-31");
+
+		while (!activities.isEmpty()) {
+			Activity a = activities.poll();
+			LocalDate activityDate = LocalDate.parse(Activity.convertDate(a.date));
+			if (activityDate.isAfter(start))
+				mileage += a.distance;
+			else
+				break;
+		}
+		l.setText(mileage + " mi");
+		l.setStyle("-fx-text-fill: Gray;"+
+			   "-fx-font-weight: Bold;"+
+			   "-fx-font-size: 24px");
+		return l;
+	}	
 
 }

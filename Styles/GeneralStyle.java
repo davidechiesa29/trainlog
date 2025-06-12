@@ -17,7 +17,7 @@ public class GeneralStyle {
                 "-fx-background-radius: 10px;" +
                 "-fx-font-weight: bold;" +
                 "-fx-font-size: " + font_size + "px;" +
-                "-fx-font-family: 'Sans Serif';" +
+                "-fx-font-family: 'Sans-serif';" +
                 "-fx-text-fill: rgb(255,214,215);";
 
 		// Style for when the button is hovered over
@@ -41,7 +41,7 @@ public class GeneralStyle {
 		}
 	}
 
-	public static void setBackgroundImage(BorderPane root, String imageToUse) {
+	public static void setBackgroundImage(Pane root, String imageToUse) {
 
 		// Adds background to the page
 		Image image = new Image(imageToUse);

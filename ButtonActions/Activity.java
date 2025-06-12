@@ -40,7 +40,7 @@ public class Activity implements Comparable<Activity> {
 		this.title = title;
 		this.locationData = location;
 
-		if (weatherData) {
+		if (weatherData && !location.equals("No Location")) {
 			if (!this.description.trim().equals("")){
 				this.description += "\n\n";
 			}
@@ -277,8 +277,8 @@ public class Activity implements Comparable<Activity> {
 	       		HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
 			Gson gson = new Gson();
 		        Weather weatherOutput =  gson.fromJson(response.body(),new TypeToken<Weather>(){});
-			return "Temp: " + Math.round(weatherOutput.hourly.temperature_2m[activityHour]) + " °F , Humidity: " +
-				weatherOutput.hourly.relative_humidity_2m[activityHour] + "% , Feels Like: " +
+			return "Temp: " + Math.round(weatherOutput.hourly.temperature_2m[activityHour]) + " °F | Humidity: " +
+				weatherOutput.hourly.relative_humidity_2m[activityHour] + "% | Feels Like: " +
 				Math.round(weatherOutput.hourly.apparent_temperature[activityHour]) + "°F";
 
 		} catch (Exception e) {

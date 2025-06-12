@@ -37,7 +37,7 @@ public class NewActivityPage {
 		BorderPane newActivityPage = new BorderPane();
 
 		// Adds background to the page
-		GeneralStyle.setBackgroundImage(newActivityPage, "Images/map_art.png");
+		GeneralStyle.setBackgroundImage((Pane)newActivityPage, "Images/map_art.png");
 
 		// Creates the save and cancel buttons for the activity
 		Button cancelButton = new Button("Cancel");
@@ -114,7 +114,6 @@ public class NewActivityPage {
 
 		newActivityPage.setCenter(activity);
 		activity.setAlignment(Pos.CENTER);
-		//newActivityPage.setStyle("-fx-background-color: rgb(219,74,64);");
 		root.getChildren().add(newActivityPage);
 
 		// Makes sure that the activity window uses up the smallest size possible

@@ -52,17 +52,17 @@ public class TrainLogApp extends Application {
 		stage.show();
 			
 		// Causes the logo to fade in for 2 seconds
-		FadeTransition logoFadeIn = new FadeTransition(Duration.seconds(2), loadingMenu);
+		FadeTransition logoFadeIn = new FadeTransition(Duration.seconds(1), loadingMenu);
 		logoFadeIn.setFromValue(0);
 		logoFadeIn.setToValue(1);
 		logoFadeIn.play();
 	
 		// Pauses the logo in the center of the screen for oen second
-		PauseTransition logoStay = new PauseTransition(Duration.seconds(1));
+		PauseTransition logoStay = new PauseTransition(Duration.seconds(0.5));
 		logoFadeIn.setOnFinished(e ->logoStay.play());
 			
 		// Makes the logo fade out for two seconds
-		FadeTransition logoFadeOut = new FadeTransition(Duration.seconds(2), loadingMenu);
+		FadeTransition logoFadeOut = new FadeTransition(Duration.seconds(1), loadingMenu);
 		logoFadeOut.setFromValue(1);
 		logoFadeOut.setToValue(0);
 		logoStay.setOnFinished(e -> logoFadeOut.play());
