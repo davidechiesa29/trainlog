@@ -108,7 +108,7 @@ public class TrainLogApp extends Application {
 
 			// Handles events triggered when pressing the view activities button
 			// Creates a new page that allows the user to scroll through saved activities
-			viewActivities.setOnAction(event -> ViewActivitiesPage.create(root));
+			viewActivities.setOnAction(event -> ViewActivitiesPage.create(root, null));
 
 			// Handles events triggered when pressing the view statistics button
 			// Creates a new page

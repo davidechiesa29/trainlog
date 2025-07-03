@@ -20,7 +20,7 @@ public class ViewActivitiesPage {
 	private static StackPane rootReference;
 	private static VBox viewActivitiesPage;
 
-	public static void create(StackPane root) {
+	public static void create(StackPane root, Filter filter) {
 		
 		rootReference = root;
 
@@ -32,21 +32,22 @@ public class ViewActivitiesPage {
 
 		// Creates options to either return to the main menu or filter the activities
 		Button escape = new Button("Return to Main Menu");
-		Button filter = new Button("Filter");
+		Button filterButton = new Button("Filter");
 
 		// Styles the filter and main menu buttons and adds their actions when pressed
-		List<Button> buttons = Arrays.asList(escape, filter);
+		List<Button> buttons = Arrays.asList(escape, filterButton);
 		GeneralStyle.setButtonAnimation(buttons, false,20);
 		escape.setOnAction(e -> root.getChildren().remove(viewActivitiesPage));
-		filter.setOnAction(e -> createFilterMenu());
+		filterButton.setOnAction(e -> createFilterMenu());
 
 		// Combines the menu and filter buttons into an HBox and styles the box
-		HBox menuOptions = new HBox(escape, filter);
+		HBox menuOptions = new HBox(escape, filterButton);
 		HBox.setMargin(escape, new Insets(25));
-		HBox.setMargin(filter, new Insets(25));
+		HBox.setMargin(filterButton, new Insets(25));
 		menuOptions.setAlignment(Pos.CENTER);
 		menuOptions.setMaxWidth(800);
-		menuOptions.setStyle("-fx-background-color:rgb(245,245,245);");
+		//menuOptions.setStyle("-fx-background-color:rgb(245,245,245);");
+		menuOptions.setStyle("-fx-background-color: transparent;");
 
 		// Creates label to be displayed when no activities are logged
 		Label noActivities = new Label("No activities have currently been logged.");
@@ -55,7 +56,8 @@ public class ViewActivitiesPage {
 
 		// Creates the box containing the activities that have been logged
 		VBox scrollableList = new VBox();
-		scrollableList.setStyle("-fx-background-color: rgb(245,245,245);");
+		//scrollableList.setStyle("-fx-background-color: rgb(245,245,245);");
+		scrollableList.setStyle("-fx-background-color: transparent;");
 		scrollableList.setAlignment(Pos.CENTER);
 
 		// Adds each activity to the box of activities
@@ -79,7 +81,8 @@ public class ViewActivitiesPage {
 		VBox scrollBoxAndOptions = new VBox(menuOptions, scrollBox);
 		scrollBoxAndOptions.setAlignment(Pos.TOP_CENTER);
 		scrollBoxAndOptions.setMaxWidth(800);
-		scrollBoxAndOptions.setStyle("-fx-background-color: rgb(245,245,245);");
+		//scrollBoxAndOptions.setStyle("-fx-background-color: rgb(245,245,245);");
+		scrollBoxAndOptions.setStyle("-fx-background-color: transparent;");
 		scrollBoxAndOptions.setEffect(new DropShadow(1.0,1.0,1.0,Color.GRAY));
 		VBox.setVgrow(scrollBoxAndOptions, Priority.ALWAYS);
 
@@ -113,7 +116,7 @@ public class ViewActivitiesPage {
 		edit_activity.setOnAction(e -> {
 			ActivityManager.remove(activity);
 			rootReference.getChildren().remove(viewActivitiesPage);
-			create(rootReference); 
+			create(rootReference, null); 
 		});
 
 		// Combines the delete and details button, and time/date label into one box
@@ -202,6 +205,7 @@ public class ViewActivitiesPage {
 	
 		Label options = new Label("Filter Options");
 	
+		// Creates aave and cancel buttons for the new filter 
 		Button save = new Button("Save");
 		Button cancel = new Button("Cancel");
 		BorderPane saveOrCancelBox = new BorderPane();
@@ -209,9 +213,16 @@ public class ViewActivitiesPage {
 		saveOrCancelBox.setRight(save);
 		
 
+		// Creates the filter options
+		Label runTypeFilterLabel = new Label("Run Type");
 		ComboBox<String> typeOption = new ComboBox<>();
 		typeOption.getItems().addAll("Recovery","Workout","Long Run", "Race");
-		
+	
+		Label distanceFilterLabel = new Label("Distance");
+
+		Label timeFilterLabel = new Label("Time");
+
+		Label dateFilterLabel = new Label("Date");	
 
 		VBox filterMenu = new VBox(options, typeOption, saveOrCancelBox);
 		filterMenu.setStyle("-fx-background-color: White;");
@@ -224,6 +235,9 @@ public class ViewActivitiesPage {
 		
 	}
 
+	/**
+	 * Calculates and formats the activity pace
+	 */
 	private static VBox generateActivityPace(double distance, int duration) {
 		if (distance == 0 || duration == 0) return new VBox();
 		int secondsPerMile = Math.round((float)(duration/distance));
@@ -287,6 +301,24 @@ public class ViewActivitiesPage {
 		if (minutes != 0) formattedDuration += minutes + "m ";
 		formattedDuration += seconds + "s";
 		return formattedDuration;
+	}
+
+	// Defines a filter for loading the activities
+	class Filter {
+
+		String runType; 
+		String distance;
+		String time;
+		String date;
+
+		public Filter(String runType, String distance, String time, String date) {
+			this.runType = runType;
+			this.distance = distance;
+			this.time = time;
+			this.date = date;
+		}
+
+
 	}
 
 }

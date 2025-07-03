@@ -13,7 +13,9 @@ import javafx.scene.effect.*;
 import javafx.scene.paint.*;
 import javafx.scene.*;
 import javafx.scene.chart.*;
+import javafx.scene.text.*;
 import java.time.format.*;
+import javafx.scene.shape.*;
 
 
 public class ViewStatisticsPage {
@@ -82,6 +84,18 @@ public class ViewStatisticsPage {
 		mileageChart.setMaxHeight(250);
 		mileageChart.setTitle("Weekly Mileage");
 		mileageChart.setLegendVisible(false);
+
+		// Styles the title of the chart
+		Platform.runLater(() -> {
+			Label title = (Label)mileageChart.lookup(".chart-title");
+			title.setStyle("-fx-font-weight: Bold;"+ 
+				       "-fx-font-family: 'Sans-serif';"+
+				       "-fx-font-size: 20px");
+			Path line = (Path)mileageChart.lookup(".chart-series-area-line");
+			if (line != null) line.setStrokeWidth(5);
+			else System.out.println("null");
+
+		;});
 
 		Label percentage = createPercentageLabel((float)weeklyMileageData[10], (float)weeklyMileageData[11]);
 		Label changeTitle = new Label("Change from Last Week");
