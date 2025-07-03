@@ -19,10 +19,12 @@ public class ViewActivitiesPage {
 
 	private static StackPane rootReference;
 	private static VBox viewActivitiesPage;
+	private static Filter filter;
 
-	public static void create(StackPane root, Filter filter) {
+	public static void create(StackPane root, Filter f) {
 		
 		rootReference = root;
+		filter = f;
 
 		// Creates the page itself
 		viewActivitiesPage = new VBox();
@@ -65,8 +67,18 @@ public class ViewActivitiesPage {
 		if (activities.isEmpty())
 			scrollableList.getChildren().add(noActivities);
 		else { 
-			while (!activities.isEmpty())
-				scrollableList.getChildren().add(createViewableActivity(activities.poll()));
+			while (!activities.isEmpty()) {
+				Activity a = activities.poll();
+				if (filter == null) scrollableList.getChildren().add(createViewableActivity(a));
+				else {
+					if (filter.runType != null) {
+						if (a.runType.equals(filter.runType))
+							scrollableList.getChildren().add(createViewableActivity(a));
+					}
+					else scrollableList.getChildren().add(createViewableActivity(a));
+				}
+
+			}
 		}
 
 		// Wraps the vertical box containing the activities in a scroll pane so that it is scrollable, and styles it
@@ -227,7 +239,13 @@ public class ViewActivitiesPage {
 		VBox filterMenu = new VBox(options, typeOption, saveOrCancelBox);
 		filterMenu.setStyle("-fx-background-color: White;");
 		filterMenu.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-		save.setOnAction(e -> rootReference.getChildren().remove(filterMenu));
+		save.setOnAction(e -> {
+
+			Filter tempTypeFilter = new Filter(typeOption.getValue(), null, null, null);
+			rootReference.getChildren().remove(viewActivitiesPage);
+			create(rootReference, tempTypeFilter);
+			rootReference.getChildren().remove(filterMenu);
+		});
 		cancel.setOnAction(e ->rootReference.getChildren().remove(filterMenu));
 		filterMenu.setAlignment(Pos.CENTER);
 
@@ -304,7 +322,7 @@ public class ViewActivitiesPage {
 	}
 
 	// Defines a filter for loading the activities
-	class Filter {
+	static class Filter {
 
 		String runType; 
 		String distance;
