@@ -70,6 +70,8 @@ public class ViewActivitiesPage {
 			while (!activities.isEmpty()) {
 				Activity a = activities.poll();
 				if (filter == null) scrollableList.getChildren().add(createViewableActivity(a));
+				
+				// Applies necessary filters to list of runs if requested
 				else {
 					if (filter.runType != null) {
 						if (a.runType.equals(filter.runType))
@@ -213,11 +215,17 @@ public class ViewActivitiesPage {
 		return activityBox;
 	}
 
+	/**
+	 * Creates the menu for filtering activities, with options to filter activities
+	 * by date, distance, time, or the type of run. Users can select from drop downs 
+	 * to filter the activities and subseqeuntly reload the view actiivites page.
+	 */
 	private static void createFilterMenu() {
 	
+		// Title of the filter menu
 		Label options = new Label("Filter Options");
 	
-		// Creates aave and cancel buttons for the new filter 
+		// Creates save and cancel buttons for the new filter 
 		Button save = new Button("Save");
 		Button cancel = new Button("Cancel");
 		BorderPane saveOrCancelBox = new BorderPane();
@@ -226,31 +234,136 @@ public class ViewActivitiesPage {
 		
 
 		// Creates the filter options
+		
+		// Creates the run-type filter
 		Label runTypeFilterLabel = new Label("Run Type");
 		ComboBox<String> typeOption = new ComboBox<>();
 		typeOption.getItems().addAll("Recovery","Workout","Long Run", "Race");
+		VBox runTypeFilter = new VBox(runTypeFilterLabel, typeOption);
 	
+		// Creates the distance filter
 		Label distanceFilterLabel = new Label("Distance");
 
-		Label timeFilterLabel = new Label("Time");
+		// Creates the distance filter box for selecting min distance
+		Label minDistanceLabel = new Label("Min");
+		ComboBox<String>distanceOption1 = new ComboBox<>();
+		distanceOption1.getSelectionModel().select("0");
+                ObservableList<String> distanceOption1Choices = FXCollections.observableArrayList();
+                for (int i = 0; i<101; i++) {
+			distanceOption1Choices.add("" +i);
+                }
+		distanceOption1.setItems(distanceOption1Choices);
 
-		Label dateFilterLabel = new Label("Date");	
+		// Creates the distance filter box for selecting max distance
+		Label maxDistanceLabel = new Label("Max");
+		ComboBox<String> distanceOption2 = new ComboBox<>();
+		distanceOption2.getSelectionModel().select("∞");
+                ObservableList<String> distanceOption2Choices = FXCollections.observableArrayList();
+		distanceOption2Choices.add("∞");
+                for (int i = 0; i<101; i++) {
+			distanceOption2Choices.add("" +i);
+                }
+		distanceOption2.setItems(distanceOption2Choices);
 
-		VBox filterMenu = new VBox(options, typeOption, saveOrCancelBox);
+		// Finalizes distance filter by combining everything into boxes
+		VBox distanceOption1Control = new VBox(minDistanceLabel, distanceOption1);
+		VBox distanceOption2Control = new VBox(maxDistanceLabel, distanceOption2);
+		HBox combinedDistanceOptions = new HBox(distanceOption1Control, distanceOption2Control);
+		VBox distanceFilter = new VBox(distanceFilterLabel, combinedDistanceOptions);
+
+		// Creates the time filter
+		Label timeFilterLabel = new Label("Time (minutes)");
+
+		// Creates time filter box for selecting min time
+		Label minTimeLabel = new Label("Min");
+		ComboBox<String> timeOption1 = new ComboBox<>();
+		timeOption1.getSelectionModel().select("0");
+                ObservableList<String> timeOption1Choices = FXCollections.observableArrayList();
+                for (int i = 0; i<1001; i++) {
+			timeOption1Choices.add("" +i);
+                }
+		timeOption1.setItems(timeOption1Choices);
+
+		// Creates time filter box for selecting max time
+		Label maxTimeLabel = new Label("Max");
+		ComboBox<String> timeOption2 = new ComboBox<>();
+		timeOption2.getSelectionModel().select("∞");
+                ObservableList<String> timeOption2Choices = FXCollections.observableArrayList();
+		timeOption2Choices.add("∞");
+                for (int i = 0; i<1001; i++) {
+			timeOption2Choices.add("" +i);
+                }
+		timeOption2.setItems(timeOption2Choices);
+
+		// Finalizes time filter by combining everything into boxes	
+		VBox timeOption1Control = new VBox(minTimeLabel, timeOption1);
+		VBox timeOption2Control = new VBox(maxTimeLabel, timeOption2);
+		HBox combinedTimeOptions = new HBox(timeOption1Control, timeOption2Control);
+		VBox timeFilter = new VBox(timeFilterLabel, combinedTimeOptions);
+
+
+		// Creates the start date filter
+		Label startDateLabel = new Label("Start Date");
+		VBox startDateFilter = new VBox(startDateLabel, createDateControl());
+
+		// Creates the end date filter
+		Label endDateLabel = new Label("End");
+		VBox endDateFilter = new VBox(endDateLabel, createDateControl());
+
+
+		// Combines all the filters into one big box
+		VBox filters = new VBox(runTypeFilter, distanceFilter, timeFilter, startDateFilter, endDateFilter);	
+
+		VBox filterMenu = new VBox(options, filters, saveOrCancelBox);
 		filterMenu.setStyle("-fx-background-color: White;");
 		filterMenu.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+
+		// Handles event in which filter is saved 
 		save.setOnAction(e -> {
 
+			// Creates the filter based on the specified values entered
 			Filter tempTypeFilter = new Filter(typeOption.getValue(), null, null, null);
+
+			// Removes the page containing the previous list of activities
 			rootReference.getChildren().remove(viewActivitiesPage);
+
+			// Generates a new page with the specified list of activities
 			create(rootReference, tempTypeFilter);
+
+			// Removes the filter menu
 			rootReference.getChildren().remove(filterMenu);
 		});
-		cancel.setOnAction(e ->rootReference.getChildren().remove(filterMenu));
-		filterMenu.setAlignment(Pos.CENTER);
 
+		// Handles event in which applied filter is canceled
+		cancel.setOnAction(e ->rootReference.getChildren().remove(filterMenu));
+
+
+
+		filterMenu.setAlignment(Pos.CENTER);
 		rootReference.getChildren().add(filterMenu);
 		
+	}
+
+	/**
+	 * Creates the date control to filter activities by in the filter menu
+	 */
+	private static HBox createDateControl() {
+
+		ComboBox<String> dateMonthOption = new ComboBox<>();
+		dateMonthOption.getItems().addAll("January","Febuary","March","April","May","June","July","August","September","Ocotober","November","December");
+		ComboBox<Integer> dateDayOption = new ComboBox<>();
+		ObservableList<Integer> dayChoices = FXCollections.observableArrayList();
+		for (int i = 1; i<32; i++) dayChoices.add(i);
+		dateDayOption.setItems(dayChoices);
+
+		ComboBox<Integer> dateYearOption = new ComboBox<>();
+		ObservableList<Integer> yearChoices = FXCollections.observableArrayList();
+		for (int i = Year.now().getValue(); i >= 1920; i--) yearChoices.add(i);
+		dateYearOption.setItems(yearChoices);
+
+		// Finalizes date control
+		return new HBox(dateMonthOption, dateDayOption, dateYearOption);
+
 	}
 
 	/**
