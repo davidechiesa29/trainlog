@@ -11,6 +11,7 @@ TrainLog is a desktop GUI application for logging and tracking running activitie
 - Retrieve weather data using [Open-Meteo](https://open-meteo.com/)’s free API.
 - Dynamically generate activity titles with OpenAI’s o3 model.
 - Lookup and save activity locations with data from [SimpleMaps](https://simplemaps.com/).
+- NOTE: AI title generation disabled for public downloads.
 
 ## Credits
 - Weather data: Open-Meteo  
