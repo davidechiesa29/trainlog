@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 
 public class Activity implements Comparable<Activity> {
 
@@ -247,7 +248,7 @@ public class Activity implements Comparable<Activity> {
 			// Creates the key	
 			apiKey = "https://archive-api.open-meteo.com/v1/archive?latitude=" + latitude + "&longitude=" + longitude + 
 			"&start_date=" + date + "&end_date=" + date + 
-			"&hourly=temperature_2m,relative_humidity_2m,apparent_temperature&temperature_unit=fahrenheit";
+			"&hourly=temperature_2m,relative_humidity_2m,apparent_temperature&temperature_unit=fahrenheit&timezone=auto";
 		}
 		
 		// Handles case in which modern weather data needs to be accessed
@@ -256,7 +257,7 @@ public class Activity implements Comparable<Activity> {
 			// Creates the key
 			apiKey = "https://api.open-meteo.com/v1/forecast?latitude=" + latitude + "&longitude=" + longitude +
 				"&hourly=temperature_2m,relative_humidity_2m,apparent_temperature&" + 
-				"temperature_unit=fahrenheit&start_date=" + date + "&end_date=" + date;
+				"temperature_unit=fahrenheit&start_date=" + date + "&end_date=" + date + "&timezone=auto";
 		}
 
 		// Creates HTTP request to send to the api using the created key
@@ -277,6 +278,7 @@ public class Activity implements Comparable<Activity> {
 	       		HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
 			Gson gson = new Gson();
 		        Weather weatherOutput =  gson.fromJson(response.body(),new TypeToken<Weather>(){});
+			
 			return "Temp: " + Math.round(weatherOutput.hourly.temperature_2m[activityHour]) + " °F | Humidity: " +
 				weatherOutput.hourly.relative_humidity_2m[activityHour] + "% | Feels Like: " +
 				Math.round(weatherOutput.hourly.apparent_temperature[activityHour]) + "°F";
